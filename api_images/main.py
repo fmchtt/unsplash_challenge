@@ -10,7 +10,7 @@ app = FastAPI(title="Unsplash Api", description="Api para o unsplash, servindo i
 
 app.add_middleware(CORSMiddleware, allow_origins=['*'],allow_methods=["*"],allow_headers=["*"])
 
-app.mount("/static", StaticFiles(directory="uploads"), name="static")
+app.mount("/uploads", StaticFiles(directory="uploads"), name="static")
 
 app.include_router(users.router, prefix="/users", tags=['Usuarios'])
 app.include_router(images.router, prefix="/images", tags=['Imagens'])

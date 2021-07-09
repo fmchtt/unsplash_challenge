@@ -2,9 +2,11 @@ from fastapi import UploadFile, File
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 import shutil
+import os
 from pathlib import Path
 from api_images.models import images_model, tags_model
 from api_images.schemas import images_schema
+from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,10 +18,9 @@ def lista_tags(db: Session, q: str ,skip: int = 0, limit: int = 100):
     return db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{q}%"))).offset(skip).limit(limit).all()
 
 def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, file: UploadFile = File(...)):
-    with open(f"uploads/{file.filename}", 'wb') as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    date = datetime.now()
 
-    image_obj = images_model.Images(title=title, description=description, path=f"static/{file.filename}", owner_id=user_id)
+    image_obj = images_model.Images(title=title, description=description, path=f"uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/{date.date()}-{date.time()}-{file.filename}", owner_id=user_id)
 
     tags = db.query(tags_model.Tags).filter(tags_model.Tags.id == tag).first()
     
@@ -30,6 +31,13 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
 
     db.add(image_obj)
     db.commit()
+
+    if not os.path.exists(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/'):
+        os.makedirs(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/')
+
+    with open(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/{date.date()}-{date.time()}-{file.filename}', 'wb') as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
     db.refresh(image_obj)
 
     return image_obj
