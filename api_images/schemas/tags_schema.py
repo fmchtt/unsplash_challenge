@@ -1,3 +1,4 @@
+from os import name
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -10,6 +11,9 @@ class Images(BaseModel):
 
   class Config:
     orm_mode = True
+
+class TagsCreate(BaseModel):
+  name: str
 
 class TagsBase(BaseModel):
   id: int
