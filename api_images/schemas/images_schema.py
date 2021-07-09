@@ -9,12 +9,21 @@ class User(BaseModel):
     class Config:
         orm_mode = True
 
+class Tags(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
 class ImagesBase(BaseModel):
     title: str
     description: Optional[str] = None
     path: str
-    tag: str
     owner_id: int
+
+    class Config:
+        orm_mode = True
 
 class ImagesCreate(ImagesBase):
     pass
@@ -22,9 +31,8 @@ class ImagesCreate(ImagesBase):
 class ImagesDelete(BaseModel):
     message: str
 
+
 class Images(ImagesBase):
     id: int
     owner: User
-
-    class Config:
-        orm_mode = True
+    tags: List[Tags]

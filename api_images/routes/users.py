@@ -25,7 +25,7 @@ def listar_usuarios(skip: int = 0, limit: int = 100, token: str = Depends(oauth2
 def buscar_usuario(user_id: int, db: Session = Depends(get_db)):
     db_user = users_controller.buscar_usuario(db, user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuário não encontrado!")
     return db_user
 
 
@@ -33,5 +33,5 @@ def buscar_usuario(user_id: int, db: Session = Depends(get_db)):
 def criar_usuario(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     db_user = users_controller.get_user_by_email(db, user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Email já registrado!")
     return users_controller.criar_usuario(db, user)

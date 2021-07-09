@@ -31,9 +31,9 @@ def buscar_imagem(image_id: int, db: Session = Depends(get_db)):
     return image
 
 @router.post("/", response_model=images_schema.Images)
-def criar_imagem(title: str = Form(...), description: str = Form(...), tag: str = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+def criar_imagem(title: str = Form(...), description: str = Form(...), tag_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     user_id = decript_token(token)
-    return images_controller.criar_imagem(db, title=title, description=description, tag=tag, file=file, user_id=user_id.get('id'))
+    return images_controller.criar_imagem(db, title=title, description=description, tag=tag_id, file=file, user_id=user_id.get('id'))
 
 @router.delete("/{image_id}/", response_model=images_schema.ImagesDelete)
 def deletar_imagem(image_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
