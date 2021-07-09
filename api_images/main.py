@@ -6,8 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="Unsplash Api", description="Api para o unsplash, servindo imagens, tags, usuarios e autenticação!", version="1.0.0")
+
 app.add_middleware(CORSMiddleware, allow_origins=['*'],allow_methods=["*"],allow_headers=["*"])
+
 app.mount("/static", StaticFiles(directory="uploads"), name="static")
 
 app.include_router(users.router, prefix="/users", tags=['Usuarios'])
