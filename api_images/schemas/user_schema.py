@@ -20,7 +20,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
-    #images: List[Images]
+    images: List[Images]
 
     class Config:
         orm_mode = True

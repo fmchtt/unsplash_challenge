@@ -13,11 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 def listar_imagens(db: Session, skip: int = 0, limit: int = 100):
     return db.query(images_model.Images).offset(skip).limit(limit).all()
 
-def criar_imagem(db: Session, user_id: int, title: str, description: str, file: UploadFile = File(...)):
+def lista_tags(db: Session, q: str ,skip: int = 0, limit: int = 100):
+    return db.query(images_model.Images).filter(images_model.Images.tag.like(f"%{q}%")).offset(skip).limit(limit).all()
+
+def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: str, file: UploadFile = File(...)):
     with open(f"uploads/{file.filename}", 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    image_obj = images_model.Images(title=title, description=description, path=f"static/{file.filename}", owner_id=user_id)
+    image_obj = images_model.Images(title=title, description=description, tag=tag, path=f"static/{file.filename}", owner_id=user_id)
     
     db.add(image_obj)
     db.commit()

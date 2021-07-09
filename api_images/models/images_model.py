@@ -11,5 +11,6 @@ class Images(Base):
     title = Column(String(50), index=True)
     description = Column(String(50), index=True)
     path = Column(String(50), nullable=False)
+    tag = Column(String(30), nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="images")

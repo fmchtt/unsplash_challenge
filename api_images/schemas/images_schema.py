@@ -13,6 +13,7 @@ class ImagesBase(BaseModel):
     title: str
     description: Optional[str] = None
     path: str
+    tag: str
     owner_id: int
 
 class ImagesCreate(ImagesBase):
@@ -23,7 +24,7 @@ class ImagesDelete(BaseModel):
 
 class Images(ImagesBase):
     id: int
-    #owner: User
+    owner: User
 
     class Config:
         orm_mode = True
