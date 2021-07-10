@@ -4,7 +4,9 @@ from api_images.controllers import users_controller
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from api_images.database import SessionLocal
+from api_images.schemas import auth_scheme
 import jwt
+import datetime
 
 def get_db() -> Session:
     db = SessionLocal()
@@ -14,7 +16,7 @@ def get_db() -> Session:
         db.close()
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/token')
 JWT_SECRET = "369427D1F63844402D16F508AE1F278EEE79A613FD669A4C5C353E0633A72A88"
 
 def verify_password(plain_password: str, hashed_password: str):
@@ -30,15 +32,20 @@ def authenticate_user(username: str, password: str, db: Session = Depends(get_db
   elif not verify_password(password, user.hashed_password):
     raise HTTPException(status_code=401, detail="Senha incorreta!")
   else:
-    return jwt.encode({"id": user.id, "email": user.email}, JWT_SECRET)
+    return jwt.encode({"id": user.id, "email": user.email, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)}, JWT_SECRET)
 
 def decript_token(token: str):
-  dec = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-  return dec
+  try:
+    dec = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+    return dec
+  except (jwt.InvalidTokenError, jwt.InvalidSignatureError):
+    raise HTTPException(401, detail="Token inválido!")
+  except jwt.ExpiredSignatureError:
+    raise HTTPException(401, detail="Token expirado!")
 
 
 router = APIRouter()
 
-@router.post("/token")
+@router.post("/token", response_model=auth_scheme.Token)
 def token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
   return {"access_token": authenticate_user(form_data.username, form_data.password, db), "token_type": "Bearer"}

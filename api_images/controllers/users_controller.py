@@ -21,3 +21,7 @@ def criar_usuario(db: Session, user: user_schema.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def verificar_usuario(db: Session, user_id: int):
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
+    return user
