@@ -22,8 +22,10 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
         raise HTTPException(400, detail='Tipo de arquivo não aceito!')
 
     date = datetime.now()
+    folder_path = f"uploads/{str(date.year)}/{str(date.month)}/{str(date.day)}/"
+    image_path = f"{folder_path}{date.date()}-{date.time()}-{file.filename}"
 
-    image_obj = images_model.Images(title=title, description=description, path=f"uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/{date.date()}-{date.time()}-{file.filename}", owner_id=user_id)
+    image_obj = images_model.Images(title=title, description=description, path=image_path, owner_id=user_id)
 
     tags = db.query(tags_model.Tags).filter(tags_model.Tags.id == tag).first()
     
@@ -33,14 +35,14 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
         raise HTTPException(404, detail="Tag não encontrada!")
 
     db.add(image_obj)
-    db.commit()
 
-    if not os.path.exists(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/'):
-        os.makedirs(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/')
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
-    with open(f'uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/{date.date()}-{date.time()}-{file.filename}', 'wb') as buffer:
+    with open(image_path, 'wb') as buffer:
         shutil.copyfileobj(file.file, buffer)
-
+    
+    db.commit()
     db.refresh(image_obj)
 
     return image_obj
