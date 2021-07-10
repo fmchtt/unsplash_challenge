@@ -10,4 +10,4 @@ class User(Base):
     email = Column(String(50), unique=True, index=True)
     hashed_password = Column(Text)
     is_active = Column(Boolean, default=True)
-    images = relationship("Images", back_populates="owner")
+    images = relationship("Images", back_populates="owner", cascade='all, delete')

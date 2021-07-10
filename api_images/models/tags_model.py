@@ -13,4 +13,4 @@ class Tags(Base):
 
   id = Column(Integer, primary_key=True, index=True)
   name = Column(String(50), nullable=False)
-  images = relationship("Images", secondary=association_table, back_populates='tags')
+  images = relationship("Images", secondary=association_table, back_populates='tags', cascade='all, delete')

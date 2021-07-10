@@ -73,6 +73,8 @@ def deletar_imagem(db: Session, image_id: int, user_id: str):
         raise HTTPException(401, detail='Não autorizado, somente o dono pode apagar a imagem!')
 
     db.delete(image)
+    os.remove(image.path)
+
     db.commit()
     return images_schema.ImagesDelete(message="Imagem deletada com sucesso")
 
