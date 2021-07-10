@@ -18,6 +18,9 @@ def lista_tags(db: Session, q: str ,skip: int = 0, limit: int = 100):
     return db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{q}%"))).offset(skip).limit(limit).all()
 
 def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, file: UploadFile = File(...)):
+    if file.content_type not in ['image/png', 'image/jpeg', 'image/webp']:
+        raise HTTPException(400, detail='Tipo de arquivo não aceito!')
+
     date = datetime.now()
 
     image_obj = images_model.Images(title=title, description=description, path=f"uploads/{str(date.day)}/{str(date.month)}/{str(date.year)}/{date.date()}-{date.time()}-{file.filename}", owner_id=user_id)
