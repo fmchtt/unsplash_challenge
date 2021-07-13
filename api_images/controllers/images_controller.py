@@ -8,18 +8,23 @@ from api_images.models import images_model, tags_model
 from api_images.schemas import images_schema
 from datetime import datetime
 
-def lista_imagens(db: Session, tag: str, title: str ,skip: int = 0, limit: int = 100):
+def lista_imagens(db: Session, tag: str, title: str, url: str ,skip: int = 0, limit: int = 100):
     if title and not tag:
-        return db.query(images_model.Images).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
+        images = db.query(images_model.Images).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
     elif tag and not title:
-        return db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).offset(skip).limit(limit).all()
+        images = db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).offset(skip).limit(limit).all()
     elif tag and title:
-        return db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
+        images = db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
     else:
-        return db.query(images_model.Images).offset(skip).limit(limit).all()
+        images = db.query(images_model.Images).offset(skip).limit(limit).all()
+
+    for image in images:
+        image.path = f'{url}{image.path}'
+    
+    return images
     
 
-def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, file: UploadFile = File(...)):
+def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, url: str,file: UploadFile = File(...)):
     if file.content_type not in ['image/png', 'image/jpeg', 'image/webp']:
         raise HTTPException(400, detail='Tipo de arquivo não aceito!')
 
@@ -47,6 +52,7 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
     db.commit()
     db.refresh(image_obj)
 
+    image_obj.path = f'{url}{image_obj.path}'
     return image_obj
 
 def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id):
@@ -85,10 +91,12 @@ def deletar_imagem(db: Session, image_id: int, user_id: str):
     db.commit()
     return images_schema.ImagesDelete(message="Imagem deletada com sucesso")
 
-def buscar_imagem(db: Session, image_id: int):
+def buscar_imagem(db: Session, image_id: int, url: str):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
 
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
+
+    image.path = f'{url}{image.path}'
 
     return image

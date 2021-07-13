@@ -16,7 +16,7 @@ def get_db() -> Session:
         db.close()
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/login')
 JWT_SECRET = "369427D1F63844402D16F508AE1F278EEE79A613FD669A4C5C353E0633A72A88"
 
 def verify_password(plain_password: str, hashed_password: str):
@@ -46,6 +46,6 @@ def decript_token(token: str):
 
 router = APIRouter()
 
-@router.post("/token", response_model=auth_scheme.Token)
+@router.post("/login", response_model=auth_scheme.Token)
 def token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
   return {"access_token": authenticate_user(form_data.username, form_data.password, db), "token_type": "Bearer"}
