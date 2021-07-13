@@ -30,7 +30,7 @@ def buscar_usuario(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@router.post("/", response_model=user_schema.User)
+@router.post("/", response_model=user_schema.User, status_code=201)
 def criar_usuario(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     db_user = users_controller.get_user_by_email(db, user.email)
     if db_user:

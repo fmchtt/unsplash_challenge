@@ -3,6 +3,7 @@ from api_images.database import Base, engine
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from api_images.router import router
+import os
 
 Base.metadata.create_all(bind=engine)
 
@@ -10,6 +11,9 @@ app = FastAPI(title="Unsplash Api", description="Api para o unsplash, servindo i
 
 app.add_middleware(CORSMiddleware, allow_origins=['*'],allow_methods=["*"],allow_headers=["*"])
 
+if not os.path.exists('uploads'):
+  os.mkdir('uploads')
+  
 app.mount("/uploads", StaticFiles(directory="uploads"), name="static")
 
 app.include_router(router, prefix='/api')

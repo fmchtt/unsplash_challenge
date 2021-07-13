@@ -24,7 +24,7 @@ def adicionar_tag_na_imagem(image_id: int, tag_id: int, db: Session = Depends(ge
   user_id = decript_token(token)
   return images_controller.adicionar_tag(db, image_id, user_id.get('id'), tag_id)
 
-@router.post("/add/", response_model=tags_schema.Tags)
+@router.post("/add/", response_model=tags_schema.Tags, status_code=201)
 def criar_tag(tag: tags_schema.TagsCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
   user_id = decript_token(token)
   return tags_controller.criar_tag(db, tag.name)

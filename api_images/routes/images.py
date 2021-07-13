@@ -17,20 +17,16 @@ def get_db() -> Session:
         
 
 @router.get("/", response_model=List[images_schema.Images])
-def listar_imagens(skip: int = 0, limit: int = 100, q: str = None, db: Session = Depends(get_db)):
-    if q:
-        images = images_controller.lista_tags(db, q, skip=skip, limit=limit)
-        return images
-    else:
-        images = images_controller.listar_imagens(db, skip=skip, limit=limit)
-        return images
+def listar_imagens(skip: int = 0, limit: int = 100, tag: str = None, title: str = None, db: Session = Depends(get_db)):
+    images = images_controller.lista_imagens(db, tag, title, skip=skip, limit=limit)
+    return images
 
 @router.get("/{image_id}/", response_model=images_schema.Images)
 def buscar_imagem(image_id: int, db: Session = Depends(get_db)):
     image = images_controller.buscar_imagem(db, image_id)
     return image
 
-@router.post("/", response_model=images_schema.Images)
+@router.post("/", response_model=images_schema.Images, status_code=201)
 def criar_imagem(title: str = Form(...), description: str = Form(...), tag_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     user_id = decript_token(token)
     return images_controller.criar_imagem(db, title=title, description=description, tag=tag_id, file=file, user_id=user_id.get('id'))
