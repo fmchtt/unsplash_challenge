@@ -8,6 +8,7 @@ import {
 import { login, getLogado } from "./services/loginService";
 import { getTags } from "./services/tagService";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { ImSpinner9 } from "react-icons/im";
 
 function App() {
   const [images1, setImages1] = useState([]);
@@ -21,8 +22,10 @@ function App() {
   const [tags, setTags] = useState([]);
   const [posting, setPosting] = useState(false);
   const [pesquisa, setPesquisa] = useState();
+  const [spinner, setSpinner] = useState(true);
 
   function carregar() {
+    setSpinner(true);
     getImages().then((img) => {
       let count = 1;
       let array1 = [];
@@ -43,10 +46,12 @@ function App() {
       setImages1(array1);
       setImages2(array2);
       setImages3(array3);
+      setSpinner(false);
     });
   }
 
   function pesquisarImages(e) {
+    setSpinner(true);
     e.preventDefault();
     getPesquisaImages(pesquisa).then((img) => {
       let count = 1;
@@ -68,6 +73,7 @@ function App() {
       setImages1(array1);
       setImages2(array2);
       setImages3(array3);
+      setSpinner(false);
     });
   }
 
@@ -85,31 +91,35 @@ function App() {
   }, []);
 
   function submitImage(e) {
+    setSpinner(true);
     setPosting(true);
     e.preventDefault();
     postImage(new FormData(e.target)).then(() => {
       carregar();
       setMostrarModal(false);
       setPosting(false);
+      setSpinner(false);
     });
   }
 
   function submitLogin(e) {
+    setSpinner(true);
     e.preventDefault();
     login(email, senha).then((a) => {
       setLogado(a);
+      setSpinner(false);
     });
   }
 
   return (
     <div className="App">
       <header className="App-header">
+        <p>Olá {usuario.username}</p>
         <form className="form-pesquisa_titulo" onSubmit={pesquisarImages}>
-          <p>Olá {usuario.username}</p>
           <input
             type="text"
             id="pesquisa"
-            placeholder="Pesquisa por Titulo"
+            placeholder="Pesquisar"
             onChange={(e) => setPesquisa(e.target.value)}
           ></input>
         </form>
@@ -145,6 +155,11 @@ function App() {
         </form>
       ) : null}
       <main>
+        {spinner ? (
+          <div className="div-spinner">
+            <ImSpinner9 className="spinner" />
+          </div>
+        ) : null}
         {mostrarModal ? (
           <div className="modal">
             <form className="modal-form" onSubmit={submitImage}>
@@ -190,6 +205,7 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
+                        setSpinner(true);
                         deleteImage(image.id).then((e) => {
                           if (e) {
                             carregar();
@@ -220,6 +236,7 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
+                        setSpinner(true);
                         deleteImage(image.id).then((e) => {
                           if (e) {
                             carregar();
@@ -250,6 +267,7 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
+                        setSpinner(true);
                         deleteImage(image.id).then((e) => {
                           if (e) {
                             carregar();
