@@ -17,8 +17,8 @@ def get_db() -> Session:
         
 
 @router.get("/", response_model=List[images_schema.Images])
-def listar_imagens(request: Request, skip: int = 0, limit: int = 100, tag: str = None, title: str = None, db: Session = Depends(get_db)):
-    images = images_controller.lista_imagens(db, tag, title, request.base_url, skip=skip, limit=limit)
+def listar_imagens(request: Request, skip: int = 0, limit: int = 100, p: str = None,db: Session = Depends(get_db)):
+    images = images_controller.lista_imagens(db, p, request.base_url, skip=skip, limit=limit)
     return images
 
 @router.get("/{image_id:int}/", response_model=images_schema.Images)

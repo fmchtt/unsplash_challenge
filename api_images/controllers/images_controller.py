@@ -4,17 +4,15 @@ from sqlalchemy.orm import Session
 import shutil
 import os
 from pathlib import Path
+
+from sqlalchemy.sql.expression import or_
 from api_images.models import images_model, tags_model
 from api_images.schemas import images_schema
 from datetime import datetime
 
-def lista_imagens(db: Session, tag: str, title: str, url: str ,skip: int = 0, limit: int = 100):
-    if title and not tag:
-        images = db.query(images_model.Images).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
-    elif tag and not title:
-        images = db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).offset(skip).limit(limit).all()
-    elif tag and title:
-        images = db.query(images_model.Images).filter(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{tag}%"))).filter(images_model.Images.title.like(f"%{title}%")).offset(skip).limit(limit).all()
+def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100):
+    if p:
+        images = db.query(images_model.Images).filter(or_(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{p}%")),images_model.Images.title.like(f"%{p}%"))).offset(skip).limit(limit).all()
     else:
         images = db.query(images_model.Images).offset(skip).limit(limit).all()
 
