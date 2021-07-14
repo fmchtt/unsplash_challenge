@@ -6,7 +6,6 @@ class Images(BaseModel):
     description: Optional[str] = None
     path: str
     id: int
-    owner_id: int
 
     class Config:
         orm_mode = True

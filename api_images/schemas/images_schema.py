@@ -20,7 +20,6 @@ class ImagesBase(BaseModel):
     title: str
     description: Optional[str] = None
     path: str
-    owner_id: int
 
     class Config:
         orm_mode = True
