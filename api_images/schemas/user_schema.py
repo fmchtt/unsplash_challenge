@@ -12,7 +12,8 @@ class Images(BaseModel):
         orm_mode = True
 
 class UserBase(BaseModel):
-    email: str    
+    username: str
+    email: str  
 
 class UserCreate(UserBase):
     password: str

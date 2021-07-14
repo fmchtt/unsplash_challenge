@@ -8,6 +8,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(50), unique=True, index=True)
+    username = Column(String(50))
     hashed_password = Column(Text)
     is_active = Column(Boolean, default=True)
     images = relationship("Images", back_populates="owner", cascade='all, delete')

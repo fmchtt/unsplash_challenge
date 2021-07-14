@@ -25,7 +25,7 @@ def listar_usuarios(db: Session, url:str, skip: int = 0, limit: int = 100):
     return users
 
 def criar_usuario(db: Session, user: user_schema.UserCreate):
-    db_user = user_model.User(email=user.email, hashed_password=hash_password(user.password))
+    db_user = user_model.User(email=user.email, hashed_password=hash_password(user.password), username=user.username)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
