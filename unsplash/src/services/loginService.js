@@ -17,6 +17,10 @@ export async function login(userName, password) {
 }
 
 export async function getLogado(){
-    const logado = await api.get("users/me")
+    const logado = await api.get("users/me", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
     return logado.data
 }
