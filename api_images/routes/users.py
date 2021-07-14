@@ -1,4 +1,4 @@
-from fastapi import HTTPException, APIRouter, Depends
+from fastapi import HTTPException, APIRouter, Depends, Request
 from typing import List
 from api_images.controllers import users_controller
 from api_images.schemas import user_schema
@@ -16,15 +16,15 @@ def get_db() -> Session:
         db.close()
 
 @router.get("/", response_model=List[user_schema.User])
-def listar_usuarios(skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def listar_usuarios(request: Request,skip: int = 0, limit: int = 100, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user_dec = decript_token(token)
-    users = users_controller.listar_usuarios(db, skip=skip, limit=limit)
+    users = users_controller.listar_usuarios(db, request.base_url, skip=skip, limit=limit)
     return users
 
 
 @router.get("/{user_id}/", response_model=user_schema.User)
-def buscar_usuario(user_id: int, db: Session = Depends(get_db)):
-    db_user = users_controller.buscar_usuario(db, user_id)
+def buscar_usuario(request: Request, user_id: int, db: Session = Depends(get_db)):
+    db_user = users_controller.buscar_usuario(db, user_id, request.base_url)
     if db_user is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado!")
     return db_user
@@ -38,6 +38,6 @@ def criar_usuario(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     return users_controller.criar_usuario(db, user)
 
 @router.get('/me', response_model=user_schema.User)
-def verificar_usuario_logado(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def verificar_usuario_logado(request: Request, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user_id = decript_token(token).get('id')
-    return users_controller.verificar_usuario(db, user_id)
+    return users_controller.verificar_usuario(db, user_id, request.base_url)
