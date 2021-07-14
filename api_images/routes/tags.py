@@ -19,7 +19,7 @@ def get_db() -> Session:
 def listar_tags(db: Session = Depends(get_db)):
   return tags_controller.listar_tags(db)
 
-@router.post("/add/{image_id}/tag/{tag_id}/", response_model=images_schema.Images)
+@router.post("/add/{image_id:int}/tag/{tag_id:int}/", response_model=images_schema.Images)
 def adicionar_tag_na_imagem(image_id: int, tag_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
   user_id = decript_token(token)
   return images_controller.adicionar_tag(db, image_id, user_id.get('id'), tag_id)

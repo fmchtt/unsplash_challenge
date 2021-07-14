@@ -22,7 +22,7 @@ def listar_usuarios(request: Request,skip: int = 0, limit: int = 100, token: str
     return users
 
 
-@router.get("/{user_id}/", response_model=user_schema.User)
+@router.get("/{user_id:int}/", response_model=user_schema.User)
 def buscar_usuario(request: Request, user_id: int, db: Session = Depends(get_db)):
     db_user = users_controller.buscar_usuario(db, user_id, request.base_url)
     if db_user is None:

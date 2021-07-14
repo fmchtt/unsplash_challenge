@@ -21,7 +21,7 @@ def listar_imagens(request: Request, skip: int = 0, limit: int = 100, tag: str =
     images = images_controller.lista_imagens(db, tag, title, request.base_url, skip=skip, limit=limit)
     return images
 
-@router.get("/{image_id}/", response_model=images_schema.Images)
+@router.get("/{image_id:int}/", response_model=images_schema.Images)
 def buscar_imagem(request: Request, image_id: int, db: Session = Depends(get_db)):
     image = images_controller.buscar_imagem(db, image_id, request.base_url)
     return image
@@ -31,7 +31,7 @@ def criar_imagem(request: Request, title: str = Form(...), description: str = Fo
     user_id = decript_token(token)
     return images_controller.criar_imagem(db, user_id.get('id'), title, description, tag_id, request.base_url, file=file)
 
-@router.delete("/{image_id}/", response_model=images_schema.ImagesDelete)
+@router.delete("/{image_id:int}/", response_model=images_schema.ImagesDelete)
 def deletar_imagem(image_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     user_id = decript_token(token)
     deleted = images_controller.deletar_imagem(db, image_id, user_id.get('id'))
