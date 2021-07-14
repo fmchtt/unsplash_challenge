@@ -12,5 +12,5 @@ class Tags(Base):
   __tablename__ = 'tags'
 
   id = Column(Integer, primary_key=True, index=True)
-  name = Column(String(50), nullable=False)
+  name = Column(String(50), nullable=False, unique=True)
   images = relationship("Images", secondary=association_table, back_populates='tags', cascade='all, delete')

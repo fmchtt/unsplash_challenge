@@ -1,4 +1,3 @@
-from os import name
 from typing import List, Optional
 from pydantic import BaseModel
 
@@ -23,5 +22,7 @@ class TagsBase(BaseModel):
     orm_mode = True
 
 class Tags(TagsBase):
-  #images = List[Images]
-  pass
+  images: List[Images]
+
+  class Config:
+    orm_mode = True

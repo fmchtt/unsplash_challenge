@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from api_images.database import SessionLocal
 from sqlalchemy.orm import Session
 from api_images.schemas import tags_schema, images_schema
@@ -24,7 +24,11 @@ def adicionar_tag_na_imagem(image_id: int, tag_id: int, db: Session = Depends(ge
   user_id = decript_token(token)
   return images_controller.adicionar_tag(db, image_id, user_id.get('id'), tag_id)
 
-@router.post("/add/", response_model=tags_schema.Tags, status_code=201)
+@router.post("/add/", response_model=tags_schema.TagsBase, status_code=201)
 def criar_tag(tag: tags_schema.TagsCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
   user_id = decript_token(token)
   return tags_controller.criar_tag(db, tag.name)
+
+@router.get('/{tag_id:int}/', response_model=tags_schema.Tags)
+def buscar_tag(tag_id: int, request: Request, db: Session = Depends(get_db)):
+  return tags_controller.buscar_tag(db, tag_id, request.base_url)

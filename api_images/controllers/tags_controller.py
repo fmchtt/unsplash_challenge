@@ -10,3 +10,11 @@ def criar_tag(db: Session, nome: str):
   db.commit()
   db.refresh(tag_obj)
   return tag_obj
+
+def buscar_tag(db: Session, tag_id: int, url: str):
+  tag = db.query(tags_model.Tags).filter(tags_model.Tags.id == tag_id).first()
+
+  for image in tag.images:
+    image.path = f"{url}{image.path}"
+    
+  return tag
