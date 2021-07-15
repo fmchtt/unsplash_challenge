@@ -27,9 +27,14 @@ def buscar_imagem(request: Request, image_id: int, db: Session = Depends(get_db)
     return image
 
 @router.post("/", response_model=images_schema.Images, status_code=201)
-def criar_imagem(request: Request, title: str = Form(...), description: str = Form(...), tag_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+def criar_imagem(request: Request, title: str = Form(...), description: str = Form(None), tag_id: int = Form(...), file: UploadFile = File(...), db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     user_id = decript_token(token)
     return images_controller.criar_imagem(db, user_id.get('id'), title, description, tag_id, request.base_url, file=file)
+
+@router.put('/{image_id:int}/', response_model=images_schema.Images)
+def alterar_imagem(req: Request,image_id: int, image: images_schema.ImageEdit, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    user_id = decript_token(token).get('id')
+    return images_controller.editar_imagem(db, image, image_id, user_id, req.base_url)
 
 @router.delete("/{image_id:int}/", response_model=images_schema.ImagesDelete)
 def deletar_imagem(image_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):

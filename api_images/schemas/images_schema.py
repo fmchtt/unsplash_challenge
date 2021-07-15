@@ -24,6 +24,13 @@ class ImagesBase(BaseModel):
     class Config:
         orm_mode = True
 
+class ImageEdit(BaseModel):
+    title: str
+    description: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
 class ImagesCreate(ImagesBase):
     pass
 

@@ -98,3 +98,21 @@ def buscar_imagem(db: Session, image_id: int, url: str):
     image.path = f'{url}{image.path}'
 
     return image
+
+def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int, user_id:int, url: str):
+    image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+
+    if not image:
+        raise HTTPException(404, detail='Imagem não encontrada!')
+
+    if not image.owner_id == user_id:
+        raise HTTPException(401, detail='Não autorizado, somente o dono pode alterar a imagem!')
+
+    image.title = image_edit.title
+    image.description = image_edit.description
+    db.commit()
+    db.refresh(image)
+
+    image.path = f'{url}{image.path}'
+
+    return image
