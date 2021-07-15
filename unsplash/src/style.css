@@ -16,9 +16,20 @@ form > p {
   display: flex;
   justify-content: space-between;
 }
+.App-header > p {
+  align-self: center;
+  font-size: x-large;
+}
 .form-pesquisa_titulo {
   display: flex;
   margin: 0 30px;
+}
+.form-pesquisa_titulo > input{
+  align-self: center;
+}
+.div-logado {
+  display: flex;
+  flex-direction: column;
 }
 .form-pesquisa_submit {
   border: none;
@@ -29,12 +40,27 @@ form > p {
   font-size: large;
   font-weight: bold;
 }
+.button-deslogar {
+  border: none;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: seagreen;
+  color: #fff;
+  font-size: large;
+  font-weight: bold;
+}
 .form-pesquisa_submit:hover {
+  cursor: pointer;
+}
+.button-deslogar:hover {
   cursor: pointer;
 }
 .form-pesquisa_submit:active {
   transform: scale(0.9);
-  color: coral;
+}
+.button-deslogar:active {
+  transform: scale(0.9);
 }
 #pesquisa {
   border-radius: 10px;
@@ -56,36 +82,37 @@ form > p {
   border-radius: 40px;
   box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.4);
 }
-.logar-submit{
+.logar-submit {
   border: none;
   border-radius: 10px;
-  background-color: black;
+  background-color: seagreen;
   color: white;
+  width: 10%;
 }
-.logar-submit:hover{
+.logar-submit:hover {
   cursor: pointer;
 }
-.logar-submit:active{
+.logar-submit:active {
   transform: scale(1.1);
 }
-.form-login{
+.form-login {
   display: flex;
   flex-direction: column;
   padding: 20px 20px;
 }
-.login-close{
+.login-close {
   align-self: flex-end;
   font-size: x-large;
 }
-.form-login label{
+.form-login label {
   margin: 70px 20px 20px;
   font-size: x-large;
 }
-.form-login input{
+.form-login input {
   height: 30px;
   border-radius: 10px;
 }
-.form-login button{
+.form-login button {
   border: none;
   border-radius: 20px;
   background-color: black;
@@ -124,6 +151,52 @@ main {
 .modal-form > * {
   margin: 11px 0;
 }
+.modal-deletar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 40vw;
+  height: 30vh;
+  z-index: 200;
+  border-radius: 25px;
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.4);
+}
+.modal-deletar p {
+  font-size: larger;
+  align-self: center;
+}
+.modal-deletar button {
+  width: 30%;
+  border: 2px solid red;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  color: red;
+  padding: 5px;
+  margin-top: 7%;
+  align-self: center;
+}
+.modal-deletar button:hover {
+  cursor: pointer;
+}
+.modal-deletar button:active {
+  transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.795);
+}
+.md-fechar {
+  align-self: flex-end;
+  font-size: larger;
+}
+.md-fechar:hover {
+  cursor: pointer;
+}
+.md-fechar:active {
+  transform: scale(0.95);
+}
 .sairModal {
   font-size: 36px;
   align-self: flex-end;
@@ -139,7 +212,7 @@ main {
   width: 100%;
   height: 100%;
   z-index: 40000000;
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   position: fixed;
   top: 50%;
   left: 50%;
@@ -149,7 +222,7 @@ main {
   align-items: center;
 }
 .spinner {
-  color: white;
+  color: black;
   font-size: xx-large;
   animation: spin 2s linear infinite;
 }

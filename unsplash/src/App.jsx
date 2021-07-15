@@ -24,6 +24,9 @@ function App() {
   const [posting, setPosting] = useState(false);
   const [pesquisa, setPesquisa] = useState();
   const [spinner, setSpinner] = useState(true);
+  const [deletar, setDeletar] = useState(false);
+  const [idImagem, setIdImagem] = useState();
+
 
   function carregar() {
     setSpinner(true);
@@ -93,9 +96,9 @@ function App() {
   }, []);
 
   function submitImage(e) {
+    e.preventDefault();
     setSpinner(true);
     setPosting(true);
-    e.preventDefault();
     postImage(new FormData(e.target)).then(() => {
       carregar();
       setMostrarModal(false);
@@ -105,12 +108,15 @@ function App() {
   }
 
   function submitLogin(e) {
-    setSpinner(true);
     e.preventDefault();
+    setSpinner(true);
     login(email, senha).then((a) => {
       setLogado(a);
       setLogar(false);
-      setSpinner(false);
+      getLogado().then((log) => {
+        setUsuario(log);
+        setSpinner(false);
+      });
     });
   }
 
@@ -127,6 +133,7 @@ function App() {
           ></input>
         </form>
         {logado ? (
+          <div className="div-logado">
           <button
             className="form-pesquisa_submit"
             onClick={(e) => {
@@ -136,6 +143,14 @@ function App() {
           >
             Adicionar Imagem
           </button>
+          <button className="button-deslogar" onClick={() => {
+            localStorage.removeItem("token")
+            setLogado(false)
+            setUsuario({ id: 0, username: "Anônimo" })
+          }} >
+            Deslogar
+          </button>
+          </div>
         ) : (
           <button
             className="logar-submit"
@@ -151,7 +166,10 @@ function App() {
       {logar ? (
         <div className="div-login">
           <form onSubmit={submitLogin} className="form-login">
-            <AiOutlineClose onClick={()=>setLogar(false)} className="login-close" />
+            <AiOutlineClose
+              onClick={() => setLogar(false)}
+              className="login-close"
+            />
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -207,7 +225,11 @@ function App() {
                   Selecione
                 </option>
                 {tags.map((tgs) => {
-                  return <option value={tgs.id}>{tgs.name}</option>;
+                  return (
+                    <option key={tgs.name + tgs.id} value={tgs.id}>
+                      {tgs.name}
+                    </option>
+                  );
                 })}
               </select>
               <label htmlFor="file">Imagem</label>
@@ -218,10 +240,36 @@ function App() {
             </form>
           </div>
         ) : null}
+        {deletar ? (
+          <div className="modal-deletar">
+            <AiOutlineClose
+              className="md-fechar"
+              onClick={() => {
+                setDeletar(false);
+              }}
+            />
+            <p>Tem certeza que deseja deletar a imagem?</p>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setSpinner(true);
+                setDeletar(false);
+                deleteImage(idImagem).then((e) => {
+                  if (e) {
+                    carregar();
+                  }
+                });
+                carregar();
+              }}
+            >
+              Confirmar
+            </button>
+          </div>
+        ) : null}
         <div>
           {images1.map((image) => {
             return (
-              <div className="imagens-pai">
+              <div className="imagens-pai" key={image.title + image.id}>
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
@@ -229,12 +277,9 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
-                        setSpinner(true);
-                        deleteImage(image.id).then((e) => {
-                          if (e) {
-                            carregar();
-                          }
-                        });
+                        // setSpinner(true);
+                        setIdImagem(image.id);
+                        setDeletar(true);
                       }}
                     >
                       Deletar
@@ -252,7 +297,7 @@ function App() {
         <div>
           {images2.map((image) => {
             return (
-              <div className="imagens-pai">
+              <div className="imagens-pai" key={image.title + image.id}>
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
@@ -260,12 +305,9 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
-                        setSpinner(true);
-                        deleteImage(image.id).then((e) => {
-                          if (e) {
-                            carregar();
-                          }
-                        });
+                        // setSpinner(true);
+                        setIdImagem(image.id);
+                        setDeletar(true);
                       }}
                     >
                       Deletar
@@ -283,7 +325,7 @@ function App() {
         <div>
           {images3.map((image) => {
             return (
-              <div className="imagens-pai">
+              <div className="imagens-pai" key={image.title + image.id}>
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
@@ -291,12 +333,9 @@ function App() {
                       className="imagens-span_deletar"
                       onClick={(e) => {
                         e.preventDefault();
-                        setSpinner(true);
-                        deleteImage(image.id).then((e) => {
-                          if (e) {
-                            carregar();
-                          }
-                        });
+                        // setSpinner(true);
+                        setIdImagem(image.id);
+                        setDeletar(true);
                       }}
                     >
                       Deletar
