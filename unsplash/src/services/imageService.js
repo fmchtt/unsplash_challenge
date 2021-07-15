@@ -13,6 +13,15 @@ export async function deleteImage(id) {
   return true;
 }
 
+export async function pegarImagem(id) {
+  const pegarImg = await api.get(`images/${id}`, {
+    headers: {
+      Authorization: "Bearer" + localStorage.getItem("token")
+    },
+  });
+  return pegarImg.data
+}
+
 export async function postImage(form) {
   const post = await api.post("images/", form, {
     headers: {

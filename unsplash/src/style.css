@@ -24,7 +24,7 @@ form > p {
   display: flex;
   margin: 0 30px;
 }
-.form-pesquisa_titulo > input{
+.form-pesquisa_titulo > input {
   align-self: center;
 }
 .div-logado {
@@ -234,6 +234,33 @@ main {
     transform: rotate(360deg);
   }
 }
+.fundo-imagem{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.603);
+}
+.modal-imagem {
+  position: absolute;
+  min-width: 45vw;
+  max-width: 45vw;
+  z-index: 2000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-imagem-exit {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  font-size: x-large;
+  color: white;
+}
+.modal-imagem-exit:hover{
+  cursor: pointer;
+}
 .imagens-pai {
   border-radius: 20px;
   margin-top: 25px;
@@ -243,7 +270,7 @@ main {
 }
 .imagens-pai:hover {
   transition: 0.5s;
-  transform: scale(1.05);
+  transform: scale(1);
   cursor: zoom-in;
 }
 .imagens {

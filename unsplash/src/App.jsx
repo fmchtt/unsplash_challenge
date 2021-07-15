@@ -3,6 +3,7 @@ import {
   deleteImage,
   getImages,
   getPesquisaImages,
+  pegarImagem,
   postImage,
 } from "./services/imageService";
 import { login, getLogado } from "./services/loginService";
@@ -26,7 +27,8 @@ function App() {
   const [spinner, setSpinner] = useState(true);
   const [deletar, setDeletar] = useState(false);
   const [idImagem, setIdImagem] = useState();
-
+  const [modalImagem, setModalImagem] = useState(false);
+  const [pathImagem, setPathImagem] = useState();
 
   function carregar() {
     setSpinner(true);
@@ -134,22 +136,25 @@ function App() {
         </form>
         {logado ? (
           <div className="div-logado">
-          <button
-            className="form-pesquisa_submit"
-            onClick={(e) => {
-              e.preventDefault();
-              setMostrarModal(true);
-            }}
-          >
-            Adicionar Imagem
-          </button>
-          <button className="button-deslogar" onClick={() => {
-            localStorage.removeItem("token")
-            setLogado(false)
-            setUsuario({ id: 0, username: "Anônimo" })
-          }} >
-            Deslogar
-          </button>
+            <button
+              className="form-pesquisa_submit"
+              onClick={(e) => {
+                e.preventDefault();
+                setMostrarModal(true);
+              }}
+            >
+              Adicionar Imagem
+            </button>
+            <button
+              className="button-deslogar"
+              onClick={() => {
+                localStorage.removeItem("token");
+                setLogado(false);
+                setUsuario({ id: 0, username: "Anônimo" });
+              }}
+            >
+              Deslogar
+            </button>
           </div>
         ) : (
           <button
@@ -266,10 +271,31 @@ function App() {
             </button>
           </div>
         ) : null}
+        {modalImagem ? (
+          <div className="fundo-imagem">
+            <AiOutlineClose
+              className="modal-imagem-exit"
+              onClick={() => {
+                setModalImagem(false);
+              }}
+            />
+            <div className="modal-imagem">
+              <img src={pathImagem} className="imagens"></img>
+            </div>
+          </div>
+        ) : null}
         <div>
           {images1.map((image) => {
             return (
-              <div className="imagens-pai" key={image.title + image.id}>
+              <div
+                className="imagens-pai"
+                key={image.title + image.id}
+                onClick={() => {
+                  setIdImagem(image.id);
+                  setPathImagem(image.path);
+                  setModalImagem(true);
+                }}
+              >
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
@@ -297,7 +323,15 @@ function App() {
         <div>
           {images2.map((image) => {
             return (
-              <div className="imagens-pai" key={image.title + image.id}>
+              <div
+                className="imagens-pai"
+                key={image.title + image.id}
+                onClick={() => {
+                  setIdImagem(image.id);
+                  setPathImagem(image.path);
+                  setModalImagem(true);
+                }}
+              >
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
@@ -325,7 +359,15 @@ function App() {
         <div>
           {images3.map((image) => {
             return (
-              <div className="imagens-pai" key={image.title + image.id}>
+              <div
+                className="imagens-pai"
+                key={image.title + image.id}
+                onClick={() => {
+                  setIdImagem(image.id);
+                  setPathImagem(image.path);
+                  setModalImagem(true);
+                }}
+              >
                 <img src={image.path} className="imagens"></img>
                 <span>
                   {image.owner.id == usuario.id ? (
