@@ -12,7 +12,7 @@ form > p {
   font-size: large;
   font-weight: bold;
 }
-.App-header{
+.App-header {
   display: flex;
   justify-content: space-between;
 }
@@ -44,6 +44,57 @@ form > p {
   font-size: large;
   width: 300px;
 }
+.div-login {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 80vw;
+  height: 80vh;
+  z-index: 200;
+  border-radius: 40px;
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.4);
+}
+.logar-submit{
+  border: none;
+  border-radius: 10px;
+  background-color: black;
+  color: white;
+}
+.logar-submit:hover{
+  cursor: pointer;
+}
+.logar-submit:active{
+  transform: scale(1.1);
+}
+.form-login{
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px;
+}
+.login-close{
+  align-self: flex-end;
+  font-size: x-large;
+}
+.form-login label{
+  margin: 70px 20px 20px;
+  font-size: x-large;
+}
+.form-login input{
+  height: 30px;
+  border-radius: 10px;
+}
+.form-login button{
+  border: none;
+  border-radius: 20px;
+  background-color: black;
+  color: white;
+  margin-top: 70px;
+  width: 30%;
+  height: 40px;
+  align-self: center;
+}
 main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -53,7 +104,7 @@ main {
   margin-top: 50px;
 }
 .modal {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -103,8 +154,12 @@ main {
   animation: spin 2s linear infinite;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .imagens-pai {
   border-radius: 20px;

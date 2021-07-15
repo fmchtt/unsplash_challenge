@@ -7,7 +7,7 @@ import {
 } from "./services/imageService";
 import { login, getLogado } from "./services/loginService";
 import { getTags } from "./services/tagService";
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCloseCircle, AiOutlineClose } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
   const [email, setEmail] = useState();
   const [senha, setSenha] = useState();
   const [logado, setLogado] = useState(false);
+  const [logar, setLogar] = useState(false);
   const [usuario, setUsuario] = useState({ id: 0, username: "Anônimo" });
   const [mostrarModal, setMostrarModal] = useState(false);
   const [tags, setTags] = useState([]);
@@ -81,6 +82,7 @@ function App() {
     carregar();
     if (localStorage.getItem("token")) {
       setLogado(true);
+      setLogar(false);
     }
     getLogado().then((log) => {
       setUsuario(log);
@@ -107,6 +109,7 @@ function App() {
     e.preventDefault();
     login(email, senha).then((a) => {
       setLogado(a);
+      setLogar(false);
       setSpinner(false);
     });
   }
@@ -123,36 +126,57 @@ function App() {
             onChange={(e) => setPesquisa(e.target.value)}
           ></input>
         </form>
-        <button
-          className="form-pesquisa_submit"
-          onClick={(e) => {
-            e.preventDefault();
-            setMostrarModal(true);
-          }}
-        >
-          Adicionar Imagem
-        </button>
-      </header>
-      {!logado ? (
-        <form onSubmit={submitLogin} className="form-login">
-          <input
-            type="email"
-            className="input-email"
-            onChange={(e) => {
-              setEmail(e.target.value);
+        {logado ? (
+          <button
+            className="form-pesquisa_submit"
+            onClick={(e) => {
+              e.preventDefault();
+              setMostrarModal(true);
             }}
-          ></input>
-          <input
-            type="password"
-            className="input-senha"
-            onChange={(e) => {
-              setSenha(e.target.value);
-            }}
-          ></input>
-          <button type="submit" className="form-loguin_submit">
-            Entrar
+          >
+            Adicionar Imagem
           </button>
-        </form>
+        ) : (
+          <button
+            className="logar-submit"
+            onClick={(e) => {
+              e.preventDefault();
+              setLogar(true);
+            }}
+          >
+            Logar
+          </button>
+        )}
+      </header>
+      {logar ? (
+        <div className="div-login">
+          <form onSubmit={submitLogin} className="form-login">
+            <AiOutlineClose onClick={()=>setLogar(false)} className="login-close" />
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="input-email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            ></input>
+            <label htmlFor="password">Senha</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              className="input-senha"
+              onChange={(e) => {
+                setSenha(e.target.value);
+              }}
+            ></input>
+            <button type="submit" className="form-loguin_submit">
+              Entrar
+            </button>
+          </form>
+        </div>
       ) : null}
       <main>
         {spinner ? (
