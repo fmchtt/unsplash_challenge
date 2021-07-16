@@ -108,6 +108,9 @@ form > p {
   border-radius: 20px;
   padding: 80px;
 }
+.form-login > p{
+  color: red;
+}
 .login-close {
   position: fixed;
   top: 20px;
@@ -137,8 +140,6 @@ main {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 25px;
-  /* padding: 0 5vw; */
-  /* max-width: 100vw; */
   margin-top: 50px;
 }
 .modal {

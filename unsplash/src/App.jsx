@@ -26,6 +26,7 @@ function App() {
   const [idImagem, setIdImagem] = useState();
   const [modalImagem, setModalImagem] = useState(false);
   const [pathImagem, setPathImagem] = useState();
+  const [erroLogin, setErroLogin] = useState();
 
   function carregar() {
     setSpinner(true);
@@ -92,15 +93,26 @@ function App() {
 
   function submitLogin(e) {
     e.preventDefault();
-    setSpinner(true);
-    login(email, senha).then((a) => {
-      setLogado(a);
-      setLogar(false);
-      getLogado().then((log) => {
-        setUsuario(log);
-        setSpinner(false);
-      });
-    });
+    if (email && senha) {
+      setSpinner(true);
+      login(email, senha)
+      .then((a) => {
+          setLogado(a);
+          setLogar(false);
+          setErroLogin("")
+          getLogado().then((log) => {
+            setUsuario(log);
+            setSpinner(false);
+          });
+        })
+        .catch((e) => {
+          console.dir(e);
+          setErroLogin(e.response.data.detail);
+          setSpinner(false);
+        });
+    } else {
+      setErroLogin("Email ou Senha não preenchidos");
+    }
   }
 
   return (
@@ -176,6 +188,7 @@ function App() {
                 setSenha(e.target.value);
               }}
             ></input>
+            {erroLogin ? <p>{erroLogin}</p> : null}
             <button type="submit" className="form-loguin_submit">
               Entrar
             </button>
@@ -195,11 +208,11 @@ function App() {
           }}
           finishSubmit={() => {
             setSpinner(false);
-            setMostrarModal(false)
-            carregar()
+            setMostrarModal(false);
+            carregar();
           }}
           clickClose={() => {
-            setMostrarModal(false)
+            setMostrarModal(false);
           }}
         />
         {deletar ? (
@@ -271,9 +284,9 @@ function App() {
                   setIdImagem(id);
                   setDeletar(true);
                 }}
-                imageClick={(id, path) => {
-                  setIdImagem(id);
-                  setPathImagem(path);
+                onClick={() => {
+                  setIdImagem(image.id);
+                  setPathImagem(image.path);
                   setModalImagem(true);
                 }}
                 showDelete={image.owner.id == usuario.id}
@@ -291,9 +304,9 @@ function App() {
                   setIdImagem(id);
                   setDeletar(true);
                 }}
-                imageClick={(id, path) => {
-                  setIdImagem(id);
-                  setPathImagem(path);
+                onClick={() => {
+                  setIdImagem(image.id);
+                  setPathImagem(image.path);
                   setModalImagem(true);
                 }}
                 showDelete={image.owner.id == usuario.id}
