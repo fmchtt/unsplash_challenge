@@ -28,6 +28,30 @@ form > p {
 .div-avatar > p {
   margin-left: 15px;
 }
+.overlay-avatar{
+  position: relative;
+}
+.mudar-avatar{
+  position: absolute;
+  display: none;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.664);
+}
+.mudar-avatar > p{
+  font-size: medium;
+  align-self: center;
+  color: white;
+}
+#avatar-input{
+  display: none;
+}
+.overlay-avatar:hover .mudar-avatar{
+  display: flex;
+  cursor: pointer;
+}
 .avatar{
   width: 70px;
   height: 70px;

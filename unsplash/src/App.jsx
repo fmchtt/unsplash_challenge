@@ -9,6 +9,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
 import ImageCard from "./components/ImageCard";
 import ImagesCreateModal from "./components/ImageCreateModal";
+import { putAvatar } from "./services/usuarioService";
 
 function App() {
   const [images1, setImages1] = useState([]);
@@ -119,14 +120,41 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div className="div-avatar">
-          <img
-            src={
-              usuario.avatar_url
-                ? usuario.avatar_url
-                : "https://via.placeholder.com/75"
-            }
-            className="avatar"
-          ></img>
+          <div className="overlay-avatar">
+            {logado ? (
+              <form>
+                <label className="mudar-avatar" htmlFor="avatar-input">
+                  <p>Mudar Avatar</p>
+                </label>
+                <input
+                  type="file"
+                  id="avatar-input"
+                  onInput={(e) => {
+                    e.preventDefault();
+                    setSpinner(true);
+                    let data = new FormData();
+                    data.append("file", e.target.files[0]);
+                    putAvatar(data)
+                      .then((e) => {
+                        setUsuario(e);
+                        carregar();
+                      })
+                      .catch(() => {
+                        setSpinner(false);
+                      });
+                  }}
+                ></input>
+              </form>
+            ) : null}
+            <img
+              src={
+                usuario.avatar_url
+                  ? usuario.avatar_url
+                  : "https://via.placeholder.com/75"
+              }
+              className="avatar"
+            ></img>
+          </div>
           <p>Olá {usuario.username}</p>
         </div>
         <form className="form-pesquisa_titulo" onSubmit={pesquisarImages}>
