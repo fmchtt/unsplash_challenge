@@ -5,6 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 const ImagesCreateModal = (props) => {
   const [tags, setTags] = useState([]);
+  const [erro, setErro] = useState();
 
   useEffect(() => {
     getTags().then((tags) => {
@@ -15,11 +16,25 @@ const ImagesCreateModal = (props) => {
   function submitImage(e) {
     e.preventDefault();
     let data = new FormData(e.target);
-    if (data.get("tag_id") != "") {
-      props.onSubmit();
-      postImage(data).then(() => {
-        props.finishSubmit();
-      });
+    if (data.get("title") != "") {
+      if (data.get("tag_id") != "") {
+        if (data.get("file").name) {
+          props.onSubmit();
+          postImage(data).then(() => {
+            props.finishSubmit();
+          });
+          setErro();
+        } else {
+          setErro("Escolha um arquivo");
+          props.onError();
+        }
+      } else {
+        setErro("Escolha uma Tag");
+        props.onError();
+      }
+    } else {
+      setErro("Coloque um título");
+      props.onError();
     }
   }
 
@@ -52,6 +67,7 @@ const ImagesCreateModal = (props) => {
           <label htmlFor="file">Imagem</label>
           <input type="file" id="file" name="file" />
           <button type="submit">Enviar</button>
+          {erro ? <p>{erro}</p> : null}
         </form>
       </div>
     );
