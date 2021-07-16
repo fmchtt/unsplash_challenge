@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const ImageCard = (props) => {
   return (
-    <div className="imagens-pai" key={props.image.key}>
+    <div className="imagens-pai" key={props.key}>
       <img src={props.image.path} className="imagens" onClick={props.onClick} />
       <div className="info">
         {props.showDelete ? (
