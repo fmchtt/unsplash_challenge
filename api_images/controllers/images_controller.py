@@ -26,7 +26,7 @@ def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100
     
 
 def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, url: str,file: UploadFile = File(...)):
-    if file.content_type not in ['image/png', 'image/jpeg', 'image/webp']:
+    if file.content_type not in ['image/png', 'image/jpeg', 'image/webp', 'image/gif']:
         raise HTTPException(400, detail='Tipo de arquivo não aceito!')
 
     date = datetime.now()

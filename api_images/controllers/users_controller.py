@@ -54,7 +54,7 @@ def verificar_usuario(db: Session, user_id: int, url:str):
     return user
 
 def alterar_avatar(db: Session, user_id: int, file: UploadFile, url: str):
-    if file.content_type not in ['image/png', 'image/jpeg', 'image/webp']:
+    if file.content_type not in ['image/png', 'image/jpeg', 'image/webp', 'image/gif']:
         raise HTTPException(400, detail='Tipo de arquivo não aceito!')
 
     user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
