@@ -18,6 +18,9 @@ def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100
 
     for image in images:
         image.path = f'{url}{image.path}'
+
+        if image.owner.avatar_url and not str(url) in image.owner.avatar_url:
+            image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
     
     return images
     
@@ -50,6 +53,8 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
     db.commit()
     db.refresh(image_obj)
 
+    if image_obj.owner.avatar_url:
+        image_obj.owner.avatar_url = f'{url}{image_obj.owner.avatar_url}'
     image_obj.path = f'{url}{image_obj.path}'
     return image_obj
 
@@ -96,6 +101,8 @@ def buscar_imagem(db: Session, image_id: int, url: str):
         raise HTTPException(404, detail='Imagem não encontrada!')
 
     image.path = f'{url}{image.path}'
+    if image.owner.avatar_url:
+            image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
 
     return image
 
@@ -114,5 +121,7 @@ def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int,
     db.refresh(image)
 
     image.path = f'{url}{image.path}'
+    if image.owner.avatar_url:
+            image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
 
     return image

@@ -19,6 +19,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    avatar_url: Optional[str] = None
     is_active: bool
     images: List[Images]
 

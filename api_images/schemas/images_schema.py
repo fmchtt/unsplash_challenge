@@ -2,9 +2,9 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 class User(BaseModel):
-    email: str
+    username: str
     id: int
-    is_active: bool
+    avatar_url: Optional[str] = None
 
     class Config:
         orm_mode = True

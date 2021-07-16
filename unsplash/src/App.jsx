@@ -3,13 +3,12 @@ import {
   deleteImage,
   getImages,
   getPesquisaImages,
-  pegarImagem,
-  postImage,
 } from "./services/imageService";
 import { login, getLogado } from "./services/loginService";
-import { getTags } from "./services/tagService";
-import { AiOutlineCloseCircle, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
+import ImageCard from "./components/ImageCard";
+import ImagesCreateModal from "./components/ImageCreateModal";
 
 function App() {
   const [images1, setImages1] = useState([]);
@@ -21,8 +20,6 @@ function App() {
   const [logar, setLogar] = useState(false);
   const [usuario, setUsuario] = useState({ id: 0, username: "Anônimo" });
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [posting, setPosting] = useState(false);
   const [pesquisa, setPesquisa] = useState();
   const [spinner, setSpinner] = useState(true);
   const [deletar, setDeletar] = useState(false);
@@ -86,28 +83,12 @@ function App() {
   useEffect(() => {
     carregar();
     if (localStorage.getItem("token")) {
+      getLogado().then((log) => {
+        setUsuario(log);
+      });
       setLogado(true);
-      setLogar(false);
     }
-    getLogado().then((log) => {
-      setUsuario(log);
-    });
-    getTags().then((tgs) => {
-      setTags(tgs);
-    });
   }, []);
-
-  function submitImage(e) {
-    e.preventDefault();
-    setSpinner(true);
-    setPosting(true);
-    postImage(new FormData(e.target)).then(() => {
-      carregar();
-      setMostrarModal(false);
-      setPosting(false);
-      setSpinner(false);
-    });
-  }
 
   function submitLogin(e) {
     e.preventDefault();
@@ -170,11 +151,11 @@ function App() {
       </header>
       {logar ? (
         <div className="div-login">
+          <AiOutlineClose
+            onClick={() => setLogar(false)}
+            className="login-close"
+          />
           <form onSubmit={submitLogin} className="form-login">
-            <AiOutlineClose
-              onClick={() => setLogar(false)}
-              className="login-close"
-            />
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -207,44 +188,20 @@ function App() {
             <ImSpinner9 className="spinner" />
           </div>
         ) : null}
-        {mostrarModal ? (
-          <div className="modal">
-            <form className="modal-form" onSubmit={submitImage}>
-              <AiOutlineCloseCircle
-                onClick={() => setMostrarModal(false)}
-                className="sairModal"
-              />
-              <label htmlFor="title">Titulo</label>
-              <input type="text" id="title" name="title" />
-              <label htmlFor="description">Descrição</label>
-              <textarea
-                name="description"
-                id="description"
-                cols="20"
-                rows="10"
-                maxLength={200}
-              ></textarea>
-              <label htmlFor="tag_id">Tag</label>
-              <select name="tag_id" id="tag_id">
-                <option value="" disabled>
-                  Selecione
-                </option>
-                {tags.map((tgs) => {
-                  return (
-                    <option key={tgs.name + tgs.id} value={tgs.id}>
-                      {tgs.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <label htmlFor="file">Imagem</label>
-              <input type="file" id="file" name="file" />
-              <button type="submit" disabled={posting}>
-                Enviar
-              </button>
-            </form>
-          </div>
-        ) : null}
+        <ImagesCreateModal
+          visible={mostrarModal}
+          onSubmit={() => {
+            setSpinner(true);
+          }}
+          finishSubmit={() => {
+            setSpinner(false);
+            setMostrarModal(false)
+            carregar()
+          }}
+          clickClose={() => {
+            setMostrarModal(false)
+          }}
+        />
         {deletar ? (
           <div className="modal-deletar">
             <AiOutlineClose
@@ -287,108 +244,60 @@ function App() {
         <div>
           {images1.map((image) => {
             return (
-              <div
-                className="imagens-pai"
+              <ImageCard
                 key={image.title + image.id}
+                image={image}
+                clickDelete={(id) => {
+                  setIdImagem(id);
+                  setDeletar(true);
+                }}
                 onClick={() => {
                   setIdImagem(image.id);
                   setPathImagem(image.path);
                   setModalImagem(true);
                 }}
-              >
-                <img src={image.path} className="imagens"></img>
-                <span>
-                  {image.owner.id == usuario.id ? (
-                    <button
-                      className="imagens-span_deletar"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // setSpinner(true);
-                        setIdImagem(image.id);
-                        setDeletar(true);
-                      }}
-                    >
-                      Deletar
-                    </button>
-                  ) : null}
-                </span>
-                <span>
-                  <p className="imagens_titulo">{image.title}</p>
-                  <p className="imagens_descricao">{image.description}</p>
-                </span>
-              </div>
+                showDelete={image.owner.id == usuario.id}
+              />
             );
           })}
         </div>
         <div>
           {images2.map((image) => {
             return (
-              <div
-                className="imagens-pai"
+              <ImageCard
                 key={image.title + image.id}
-                onClick={() => {
-                  setIdImagem(image.id);
-                  setPathImagem(image.path);
+                image={image}
+                clickDelete={(id) => {
+                  setIdImagem(id);
+                  setDeletar(true);
+                }}
+                imageClick={(id, path) => {
+                  setIdImagem(id);
+                  setPathImagem(path);
                   setModalImagem(true);
                 }}
-              >
-                <img src={image.path} className="imagens"></img>
-                <span>
-                  {image.owner.id == usuario.id ? (
-                    <button
-                      className="imagens-span_deletar"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // setSpinner(true);
-                        setIdImagem(image.id);
-                        setDeletar(true);
-                      }}
-                    >
-                      Deletar
-                    </button>
-                  ) : null}
-                </span>
-                <span>
-                  <p className="imagens_titulo">{image.title}</p>
-                  <p className="imagens_descricao">{image.description}</p>
-                </span>
-              </div>
+                showDelete={image.owner.id == usuario.id}
+              />
             );
           })}
         </div>
         <div>
           {images3.map((image) => {
             return (
-              <div
-                className="imagens-pai"
+              <ImageCard
                 key={image.title + image.id}
-                onClick={() => {
-                  setIdImagem(image.id);
-                  setPathImagem(image.path);
+                image={image}
+                clickDelete={(id) => {
+                  setIdImagem(id);
+                  setDeletar(true);
+                }}
+                imageClick={(id, path) => {
+                  setIdImagem(id);
+                  setPathImagem(path);
                   setModalImagem(true);
                 }}
-              >
-                <img src={image.path} className="imagens"></img>
-                <span>
-                  {image.owner.id == usuario.id ? (
-                    <button
-                      className="imagens-span_deletar"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // setSpinner(true);
-                        setIdImagem(image.id);
-                        setDeletar(true);
-                      }}
-                    >
-                      Deletar
-                    </button>
-                  ) : null}
-                </span>
-                <span>
-                  <p className="imagens-titulo">{image.title}</p>
-                  <p className="imagens-descricao">{image.description}</p>
-                </span>
-              </div>
+                showDelete={image.owner.id == usuario.id}
+              />
             );
           })}
         </div>

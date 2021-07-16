@@ -1,5 +1,7 @@
-from fastapi import HTTPException, APIRouter, Depends, Request
+from fastapi import HTTPException, APIRouter, Depends, Request, File
 from typing import List
+
+from fastapi.datastructures import UploadFile
 from api_images.controllers import users_controller
 from api_images.schemas import user_schema
 from api_images.routes.auth import decript_token, oauth2_scheme
@@ -41,3 +43,8 @@ def criar_usuario(user: user_schema.UserCreate, db: Session = Depends(get_db)):
 def verificar_usuario_logado(request: Request, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user_id = decript_token(token).get('id')
     return users_controller.verificar_usuario(db, user_id, request.base_url)
+
+@router.put('/avatar/', response_model=user_schema.User)
+def alterar_imagem_perfil(request: Request,file: UploadFile = File(...) ,token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    user_id = decript_token(token).get('id')
+    return users_controller.alterar_avatar(db, user_id, file, request.base_url)
