@@ -96,10 +96,10 @@ function App() {
     if (email && senha) {
       setSpinner(true);
       login(email, senha)
-      .then((a) => {
+        .then((a) => {
           setLogado(a);
           setLogar(false);
-          setErroLogin("")
+          setErroLogin("");
           getLogado().then((log) => {
             setUsuario(log);
             setSpinner(false);
@@ -118,7 +118,17 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>Olá {usuario.username}</p>
+        <div className="div-avatar">
+          <img
+            src={
+              usuario.avatar_url
+                ? usuario.avatar_url
+                : "https://via.placeholder.com/75"
+            }
+            className="avatar"
+          ></img>
+          <p>Olá {usuario.username}</p>
+        </div>
         <form className="form-pesquisa_titulo" onSubmit={pesquisarImages}>
           <input
             type="text"
@@ -202,6 +212,9 @@ function App() {
           </div>
         ) : null}
         <ImagesCreateModal
+          onError={() => {
+            setSpinner(false);
+          }}
           visible={mostrarModal}
           onSubmit={() => {
             setSpinner(true);

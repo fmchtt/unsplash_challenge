@@ -20,6 +20,20 @@ form > p {
   align-self: center;
   font-size: x-large;
 }
+.div-avatar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.div-avatar > p {
+  margin-left: 15px;
+}
+.avatar{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .form-pesquisa_titulo {
   display: flex;
   margin: 0 30px;
