@@ -14,7 +14,7 @@ def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100
     if p:
         images = db.query(images_model.Images).filter(or_(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{p}%")),images_model.Images.title.like(f"%{p}%"))).offset(skip).limit(limit).all()
     else:
-        images = db.query(images_model.Images).offset(skip).limit(limit).all()
+        images = db.query(images_model.Images).order_by(images_model.Images.id.desc()).offset(skip).limit(limit).all()
 
     for image in images:
         image.path = f'{url}{image.path}'
