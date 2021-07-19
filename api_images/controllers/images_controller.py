@@ -58,7 +58,7 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
     image_obj.path = f'{url}{image_obj.path}'
     return image_obj
 
-def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id):
+def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id, url: str):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
 
     if not image:
@@ -76,6 +76,10 @@ def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id):
 
     db.commit()
     db.refresh(image)
+
+    if image.owner.avatar_url:
+        image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
+    image.path = f'{url}{image.path}'
 
     return image
 
@@ -123,5 +127,31 @@ def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int,
     image.path = f'{url}{image.path}'
     if image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
+
+    return image
+
+
+def remover_tags(db: Session, image_id: int, user_id: str, tag_id, url: str):
+    image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+
+    if not image:
+        raise HTTPException(404, detail='Imagem não encontrada!')
+
+    if not user_id == image.owner_id:
+        raise HTTPException(401, detail='Não autorizado, somente o dono pode adicionar tags a imagem!')
+
+    tag = db.query(tags_model.Tags).filter(tags_model.Tags.id == tag_id).first()
+
+    if not tag:
+        raise HTTPException(404, detail='Tag não encontrada!')
+
+    image.tags.remove(tag)
+
+    db.commit()
+    db.refresh(image)
+
+    if image.owner.avatar_url:
+        image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
+    image.path = f'{url}{image.path}'
 
     return image

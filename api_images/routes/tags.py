@@ -20,9 +20,9 @@ def listar_tags(db: Session = Depends(get_db)):
   return tags_controller.listar_tags(db)
 
 @router.post("/add/{image_id:int}/tag/{tag_id:int}/", response_model=images_schema.Images)
-def adicionar_tag_na_imagem(image_id: int, tag_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+def adicionar_tag_na_imagem(request: Request,image_id: int, tag_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
   user_id = decript_token(token)
-  return images_controller.adicionar_tag(db, image_id, user_id.get('id'), tag_id)
+  return images_controller.adicionar_tag(db, image_id, user_id.get('id'), tag_id, request.base_url)
 
 @router.post("/add/", response_model=tags_schema.TagsBase, status_code=201)
 def criar_tag(tag: tags_schema.TagsCreate, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
@@ -32,3 +32,9 @@ def criar_tag(tag: tags_schema.TagsCreate, db: Session = Depends(get_db), token:
 @router.get('/{tag_id:int}/', response_model=tags_schema.Tags)
 def buscar_tag(tag_id: int, request: Request, db: Session = Depends(get_db)):
   return tags_controller.buscar_tag(db, tag_id, request.base_url)
+
+
+@router.delete("/remove/{image_id:int}/tag/{tag_id:int}/", response_model=images_schema.Images)
+def remover_tag_imagem(request: Request, image_id: int, tag_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+  user_id = decript_token(token)
+  return images_controller.remover_tags(db, image_id, user_id.get('id'), tag_id, request.base_url)
