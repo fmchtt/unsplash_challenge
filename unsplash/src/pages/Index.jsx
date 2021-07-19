@@ -155,6 +155,7 @@ function Index() {
                   ? usuario.avatar_url
                   : "https://via.placeholder.com/75"
               }
+              alt="avatar"
               className="avatar"
             ></img>
           </div>
@@ -294,7 +295,7 @@ function Index() {
               }}
             />
             <div className="modal-imagem">
-              <img src={pathImagem} className="imagens"></img>
+              <img src={pathImagem} className="imagens" alt=""></img>
             </div>
           </div>
         ) : null}
