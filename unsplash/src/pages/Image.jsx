@@ -4,12 +4,15 @@ import { pegarImagem } from "../services/imageService";
 import { GiReturnArrow } from "react-icons/gi";
 import { BsPlusCircleFill } from "react-icons/bs";
 import "../styles/imagePage.css";
-import { getTags } from "../services/tagService";
+import { deletarTag, getTags, postTagImagem } from "../services/tagService";
+import { MdDelete } from "react-icons/md";
+import { getLogado } from "../services/loginService";
 
 function Image() {
   const [imagem, setImagem] = useState();
-  const [tags, setTags] = useState()
+  const [tags, setTags] = useState();
   const [trocarTag, setTrocarTag] = useState(false);
+  const [usuario, setUsuario] = useState();
 
   let { id } = useParams();
 
@@ -20,9 +23,13 @@ function Image() {
       setImagem(e);
     });
     getTags().then((e) => {
-        setTags(e)
-    }) 
-  });
+      setTags(e);
+    });
+    getLogado().then((e) => {
+      setUsuario(e);
+    });
+  }, []);
+
   if (imagem) {
     return (
       <div className="page-image-div">
@@ -37,39 +44,70 @@ function Image() {
           <div>
             <div>
               <img
-                src={imagem.owner.avatar_url}
+                src={
+                  imagem.owner.avatar_url
+                    ? imagem.owner.avatar_url
+                    : "https://via.placeholder.com/75"
+                }
                 className="page-image-avatar"
               ></img>
-              <h5 className="page-image-nome">{imagem.owner.username}</h5>
+              <h1 className="page-image-nome">{imagem.owner.username}</h1>
             </div>
-            <h6 className="page-image-titulo">Titulo: {imagem.title}</h6>
-            <p className="page-image-descricao">
-              Descrição: {imagem.description}
-            </p>
+            <h2 className="page-image-titulo">{imagem.title}</h2>
+            <p className="page-image-descricao">{imagem.description}</p>
             <div>
               {imagem.tags.map((e) => {
-                return <p className="page-image-descricao">{e.name}</p>;
+                const tagId = e;
+                return (
+                  <p className="page-image-tag">
+                    {tagId.name}
+                    {usuario.id == imagem.owner.id ? (
+                      <MdDelete
+                        className="page-image-deletar"
+                        onClick={() => {
+                          deletarTag(imagem.id, tagId.id).then((e) => {
+                            setImagem(e);
+                          });
+                        }}
+                      />
+                    ) : null}
+                  </p>
+                );
               })}
-              {!trocarTag ? (
-                <BsPlusCircleFill
-                  className="page-image-addTag"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setTrocarTag(true);
-                  }}
-                />
-              ) : (
-                <select name="tag_id" id="tag_id">
-                  <option value="">Selecione</option>
-                  {tags.map((tag) => {
-                    return (
-                      <option key={tag.name + tag.id} value={tag.id}>
-                        {tag.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              )}
+              {usuario.id == imagem.owner.id ? (
+                !trocarTag ? (
+                  <BsPlusCircleFill
+                    className="page-image-addTag"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTrocarTag(true);
+                    }}
+                  />
+                ) : (
+                  <select
+                    name="tag_id"
+                    id="tag_id"
+                    onChange={(e) => {
+                      postTagImagem(imagem.id, e.target.value).then((e) => {
+                        setImagem(e);
+                      });
+                      // console.log(e.target.value)
+                      setTrocarTag(false);
+                    }}
+                  >
+                    <option value="" disabled selected>
+                      Selecione
+                    </option>
+                    {tags.map((tag) => {
+                      return (
+                        <option key={tag.name + tag.id} value={tag.id}>
+                          {tag.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                )
+              ) : null}
             </div>
           </div>
         </div>
