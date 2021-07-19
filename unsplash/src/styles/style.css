@@ -362,6 +362,7 @@ main {
 
 .imagens-pai .info .tags {
   display: flex;
+  flex-wrap: wrap;
   margin-bottom: 20px;
   margin-left: 10px;
 }
@@ -370,6 +371,7 @@ main {
   padding: 5px;
   border-radius: 15px;
   margin-left: 10px;
+  margin-top: 5px;
 }
 
 .imagens-pai:hover .info {
