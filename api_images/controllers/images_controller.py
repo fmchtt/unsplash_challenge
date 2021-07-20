@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from sqlalchemy.sql.expression import or_
-from api_images.models import images_model, tags_model
+from api_images.models import images_model, tags_model, user_model
 from api_images.schemas import images_schema
 from datetime import datetime
 
@@ -18,6 +18,7 @@ def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100
 
     for image in images:
         image.path = f'{url}{image.path}'
+        image.image_likes = len(image.likes)
 
         if image.owner.avatar_url and not str(url) in image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
@@ -53,6 +54,8 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
     db.commit()
     db.refresh(image_obj)
 
+    
+    image_obj.image_likes = len(image_obj.likes)
     if image_obj.owner.avatar_url:
         image_obj.owner.avatar_url = f'{url}{image_obj.owner.avatar_url}'
     image_obj.path = f'{url}{image_obj.path}'
@@ -77,6 +80,7 @@ def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id, url: str):
     db.commit()
     db.refresh(image)
 
+    image.image_likes = len(image.likes)
     if image.owner.avatar_url:
         image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
     image.path = f'{url}{image.path}'
@@ -104,6 +108,7 @@ def buscar_imagem(db: Session, image_id: int, url: str):
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
 
+    image.image_likes = len(image.likes)
     image.path = f'{url}{image.path}'
     if image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
@@ -124,6 +129,7 @@ def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int,
     db.commit()
     db.refresh(image)
 
+    image.image_likes = len(image.likes)
     image.path = f'{url}{image.path}'
     if image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
@@ -150,8 +156,35 @@ def remover_tags(db: Session, image_id: int, user_id: str, tag_id, url: str):
     db.commit()
     db.refresh(image)
 
+    image.image_likes = len(image.likes)
     if image.owner.avatar_url:
         image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
     image.path = f'{url}{image.path}'
+
+    return image
+
+
+def like_image(db: Session, image_id:int, user_id:int, url: str):
+    image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
+
+    if not image:
+        raise HTTPException(404, detail='Imagem não encontrada!')
+
+    if not user:
+        raise HTTPException(404, detail='Usuario não encontrada!')
+
+    if user in image.likes:
+        image.likes.remove(user)
+    else:
+        image.likes.append(user)
+
+    db.commit()
+    db.refresh(image)
+
+    image.image_likes = len(image.likes)
+    image.path = f'{url}{image.path}'
+    if image.owner.avatar_url:
+            image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
 
     return image

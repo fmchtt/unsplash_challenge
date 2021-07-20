@@ -1,12 +1,20 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+class User(BaseModel):
+    username: str
+    id: int
+    avatar_url: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
 class Images(BaseModel):
   id: int
   title: str
   description: Optional[str] = None
   path: str
-  owner_id: int
+  owner: User
 
   class Config:
     orm_mode = True

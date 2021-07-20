@@ -41,4 +41,5 @@ class ImagesDelete(BaseModel):
 class Images(ImagesBase):
     id: int
     owner: User
+    image_likes: int
     tags: List[Tags]
