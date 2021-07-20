@@ -210,29 +210,30 @@ function Index() {
             className="login-close"
           />
           <form onSubmit={submitLogin} className="form-login">
-            <label htmlFor="email">Email</label>
+            <h3>Entrar</h3>
             <input
               type="email"
               name="email"
               id="email"
               className="input-email"
+              placeholder="Email"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
             ></input>
-            <label htmlFor="password">Senha</label>
             <input
               type="password"
               name="password"
               id="password"
               className="input-senha"
+              placeholder="Senha"
               onChange={(e) => {
                 setSenha(e.target.value);
               }}
             ></input>
             {erroLogin ? <p>{erroLogin}</p> : null}
             <button type="submit" className="form-loguin_submit">
-              Entrar
+              Confirmar
             </button>
           </form>
         </div>

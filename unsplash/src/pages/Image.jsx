@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { pegarImagem } from "../services/imageService";
+import { alterarImagem, pegarImagem } from "../services/imageService";
 import { GiReturnArrow } from "react-icons/gi";
 import { BsPlusCircleFill } from "react-icons/bs";
+import { MdDelete } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { AiOutlineClose } from "react-icons/ai";
 import "../styles/imagePage.css";
 import { deletarTag, getTags, postTagImagem } from "../services/tagService";
-import { MdDelete } from "react-icons/md";
 import { getLogado } from "../services/loginService";
 
 function Image() {
   const [imagem, setImagem] = useState();
   const [tags, setTags] = useState();
   const [trocarTag, setTrocarTag] = useState(false);
-  const [usuario, setUsuario] = useState();
+  const [usuario, setUsuario] = useState({ id: 0 });
+  const [modal, setModal] = useState(false);
+  const [titulo, setTitulo] = useState();
+  const [descricao, setDescricao] = useState();
 
   let { id } = useParams();
 
@@ -42,7 +47,7 @@ function Image() {
         <div className="page-image-grupo">
           <img src={imagem.path} className="page-image-imagem" />
           <div>
-            <div>
+            <div className="page-image-grupo-avatar">
               <img
                 src={
                   imagem.owner.avatar_url
@@ -53,9 +58,61 @@ function Image() {
               ></img>
               <h1 className="page-image-nome">{imagem.owner.username}</h1>
             </div>
-            <h2 className="page-image-titulo">{imagem.title}</h2>
+            <div className="page-image-grupo-titulo-alterar">
+              <h2 className="page-image-titulo">{imagem.title}</h2>
+              {usuario.id == imagem.owner.id ? (
+                <FiEdit
+                  className="page-image-alterar"
+                  onClick={() => {
+                    setTitulo(imagem.title);
+                    setDescricao(imagem.description);
+                    setModal(true);
+                  }}
+                />
+              ) : null}
+            </div>
             <p className="page-image-descricao">{imagem.description}</p>
-            <div>
+            {modal ? (
+              <div className="page-image-modal-fundo">
+                <form
+                  className="page-image-modal-form"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    alterarImagem(imagem.id, titulo, descricao);
+                    setModal(false);
+                  }}
+                >
+                  <AiOutlineClose
+                    className="page-image-modal-close"
+                    onClick={() => {
+                      setModal(false);
+                    }}
+                  />
+                  <label htmlFor="titulo">Título</label>
+                  <input
+                    type="text"
+                    name="titulo"
+                    value={titulo}
+                    onChange={(e) => {
+                      setTitulo(e.target.value);
+                    }}
+                  />
+                  <label htmlFor="descricao">Descrição</label>
+                  <input
+                    type="text"
+                    name="descricao"
+                    value={descricao}
+                    onChange={(e) => {
+                      setDescricao(e.target.value);
+                    }}
+                  />
+                  <button type="submit" className="page-image-modal-button">
+                    Confirmar
+                  </button>
+                </form>
+              </div>
+            ) : null}
+            <div className="page-image-grupo-avatar">
               {imagem.tags.map((e) => {
                 const tagId = e;
                 return (
@@ -87,6 +144,7 @@ function Image() {
                   <select
                     name="tag_id"
                     id="tag_id"
+                    className="page-image-select"
                     onChange={(e) => {
                       postTagImagem(imagem.id, e.target.value).then((e) => {
                         setImagem(e);

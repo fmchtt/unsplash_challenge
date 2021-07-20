@@ -2,8 +2,6 @@
 
 * {
   font-family: "Josefin Sans", sans-serif;
-  font-size: large;
-  font-weight: bold;
 }
 body {
   margin: 30px 15px;
@@ -20,7 +18,7 @@ form > p {
   align-self: center;
   font-size: x-large;
 }
-.div-avatar{
+.div-avatar {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -28,10 +26,10 @@ form > p {
 .div-avatar > p {
   margin-left: 15px;
 }
-.overlay-avatar{
+.overlay-avatar {
   position: relative;
 }
-.mudar-avatar{
+.mudar-avatar {
   position: absolute;
   display: none;
   width: 70px;
@@ -40,19 +38,19 @@ form > p {
   text-align: center;
   background-color: rgba(0, 0, 0, 0.664);
 }
-.mudar-avatar > p{
+.mudar-avatar > p {
   font-size: medium;
   align-self: center;
   color: white;
 }
-#avatar-input{
+#avatar-input {
   display: none;
 }
-.overlay-avatar:hover .mudar-avatar{
+.overlay-avatar:hover .mudar-avatar {
   display: flex;
   cursor: pointer;
 }
-.avatar{
+.avatar {
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -143,10 +141,11 @@ form > p {
   transform: translate(-50%, -50%);
 
   background: white;
-  border-radius: 20px;
-  padding: 80px;
+  border-radius: 6px;
+  width: 20vw;
+  height: 45vh;
 }
-.form-login > p{
+.form-login > p {
   color: red;
 }
 .login-close {
@@ -157,22 +156,28 @@ form > p {
   color: white;
   cursor: pointer;
 }
-.form-login label {
-  margin: 70px 20px 20px;
-  font-size: x-large;
+.form-login h3 {
+  font-size: xx-large;
+  color: gray;
+  padding: 0;
+  margin: 10px 0 10px 0;
 }
 .form-login input {
+  margin-top: 15px;
   height: 30px;
-  border-radius: 10px;
+  border: none;
+  border-bottom: solid gray 1px;
+  font-size: medium;
 }
 .form-login button {
   border: none;
-  border-radius: 20px;
-  background-color: black;
+  border-radius: 4px;
+  background-color: seagreen;
   color: white;
-  margin-top: 70px;
-  padding: 20px;
+  margin-top: 30px;
+  padding: 10px;
   cursor: pointer;
+  font-size: medium;
 }
 main {
   display: grid;
@@ -197,11 +202,48 @@ main {
   flex-direction: column;
   width: 30vw;
   background-color: #fff;
-  border-radius: 20px;
-  padding: 60px;
+  border-radius: 10px;
+  padding: 20px 30px;
 }
 .modal-form > * {
   margin: 11px 0;
+}
+.modal-form label {
+  font-size: large;
+  font-weight: bold;
+}
+.modal-form-titulo {
+  height: 20px;
+  font-size: medium;
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 5px;
+}
+.modal-form textarea {
+  font-size: medium;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+.modal-form select {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: medium;
+}
+.modal-form-arquivo {
+  border: none;
+  font-size: medium;
+}
+.modal-form button {
+  width: fit-content;
+  color: white;
+  align-self: center;
+  background-color: seagreen;
+  padding: 15px;
+  font-size: medium;
+  border: none;
+  border-radius: 10px;
+  margin-top: 40px;
 }
 .modal-deletar {
   position: fixed;
@@ -310,14 +352,6 @@ main {
   align-items: center;
   justify-content: center;
 }
-.modal-form > button {
-  border: none;
-  border-radius: 20px;
-  background-color: black;
-  color: white;
-  padding: 20px;
-  cursor: pointer;
-}
 .modal-imagem > img {
   height: 80vh;
   max-width: 80vw;
@@ -334,6 +368,13 @@ main {
 }
 .modal-imagem-exit:hover {
   cursor: pointer;
+}
+.imagens-titulo {
+  font-size: x-large;
+  font-weight: bold;
+}
+.imagens-titulo::first-letter {
+  text-transform: uppercase;
 }
 .imagens-pai {
   position: relative;
@@ -367,11 +408,11 @@ main {
   margin-left: 10px;
 }
 .imagens-pai .info .tags span {
-  background-color: #00b3e8;
+  background-color: seagreen;
   padding: 5px;
   border-radius: 15px;
   margin-left: 10px;
-  margin-top: 5px;
+  color: white;
 }
 
 .imagens-pai:hover .info {
@@ -385,7 +426,7 @@ main {
 
   width: 100%;
 
-  background: rgba(185, 181, 181, 0.603);
+  background: rgba(151, 148, 148, 0.781);
   border-radius: 0 0 20px 20px;
 }
 
@@ -397,13 +438,13 @@ main {
   position: absolute;
   top: 10px;
   right: 10px;
-  border: 2px solid red;
+  border: none;
   border-radius: 10px;
-  color: red;
-  padding: 2px 10px;
+  color: white;
+  padding: 4px 10px;
   font-weight: bold;
   font-size: large;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: red;
 }
 
 .imagens-pai .info > button:hover {
@@ -413,6 +454,7 @@ main {
 .imagens {
   object-fit: cover;
   width: 100%;
+  min-height: 300px;
   margin: 0;
   border-radius: 20px;
 }

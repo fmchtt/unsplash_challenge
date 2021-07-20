@@ -44,13 +44,13 @@ const ImagesCreateModal = (props) => {
         <AiOutlineClose onClick={props.clickClose} className="sairModal" />
         <form className="modal-form" onSubmit={submitImage}>
           <label htmlFor="title">Titulo</label>
-          <input type="text" id="title" name="title" />
+          <input type="text" id="title" name="title" className="modal-form-titulo" />
           <label htmlFor="description">Descrição</label>
           <textarea
             name="description"
             id="description"
             cols="20"
-            rows="10"
+            rows="7"
             maxLength={200}
           ></textarea>
           <label htmlFor="tag_id">Tag</label>
@@ -65,7 +65,7 @@ const ImagesCreateModal = (props) => {
             })}
           </select>
           <label htmlFor="file">Imagem</label>
-          <input type="file" id="file" name="file" />
+          <input type="file" id="file" name="file" className="modal-form-arquivo" />
           <button type="submit">Enviar</button>
           {erro ? <p>{erro}</p> : null}
         </form>

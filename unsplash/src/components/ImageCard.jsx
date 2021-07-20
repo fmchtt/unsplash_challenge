@@ -26,10 +26,16 @@ const ImageCard = (props) => {
           />
           <div>
             <p className="imagens-titulo">{props.image.title}</p>
-            <p className="imagens-descricao">{props.image.description}</p>
+            <p className="imagens-descricao">
+              {props.image.description ? (props.image.description.length > 45
+                ? (props.image.description.substring(0, 45) + '...')
+                : props.image.description): null}
+            </p>
             <div className="tags">
-              {props.image.tags.map((tag) => {
-                return <span>{tag.name}</span>;
+              {props.image.tags.map((tag, indice) => {
+                if (indice < 2) {
+                  return <span>{tag.name}</span>;
+                }
               })}
             </div>
           </div>
