@@ -19,18 +19,22 @@ const ImageCard = (props) => {
             Deletar
           </button>
         ) : null}
-        <div onClick={props.onClick} className="overlay-detail">
-          <img
-            alt="avatar"
-            src={
-              props.image.owner.avatar_url
-                ? props.image.owner.avatar_url
-                : "https://via.placeholder.com/150"
-            }
-          />
+        <div className="overlay-detail">
+          {props.avatar ? (
+            <img
+              alt="avatar"
+              src={
+                props.image.owner.avatar_url
+                  ? props.image.owner.avatar_url
+                  : "https://via.placeholder.com/150"
+              }
+            />
+          ) : null}
           <div>
-            <p className="imagens-titulo">{props.image.title}</p>
-            <p className="imagens-descricao">
+            <p className="imagens-titulo" onClick={props.onClick}>
+              {props.image.title}
+            </p>
+            <p className="imagens-descricao" onClick={props.onClick}>
               {props.image.description
                 ? props.image.description.length > 45
                   ? props.image.description.substring(0, 45) + "..."
@@ -38,11 +42,22 @@ const ImageCard = (props) => {
                 : null}
             </p>
             <div className="tags">
-              {props.image.tags.map((tag, indice) => {
-                if (indice < 2) {
-                  return <span key={tag.name + tag.id}>{tag.name}</span>;
-                }
-              })}
+              {props.avatar
+                ? props.image.tags.map((tag, indice) => {
+                    if (indice < 2) {
+                      return (
+                        <span
+                          key={tag.name + tag.id}
+                          onClick={() => {
+                            props.tagClick(tag.id);
+                          }}
+                        >
+                          {tag.name}
+                        </span>
+                      );
+                    }
+                  })
+                : null}
             </div>
           </div>
         </div>

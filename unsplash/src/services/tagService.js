@@ -18,6 +18,11 @@ export async function postTagImagem(imgId, tagId) {
   return tagImg.data;
 }
 
+export async function buscarTag(tagID) {
+  const tag = await api.get(`tags/${tagID}`, {});
+  return tag.data;
+}
+
 export async function deletarTag(imgId, tagId) {
   const tagImg = await api.delete(`tags/remove/${imgId}/tag/${tagId}/`, {
     headers: {

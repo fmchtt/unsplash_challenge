@@ -117,6 +117,10 @@ body {
 .page-image-tag:hover .page-image-deletar {
   animation: aumentar 0.5s;
   display: flex;
+  cursor: pointer;
+}
+.page-image-tag:hover{
+  cursor: pointer;
 }
 @keyframes aumentar {
   0% {

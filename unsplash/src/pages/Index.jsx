@@ -184,11 +184,11 @@ function Index() {
             <button
               className="button-deslogar"
               onClick={() => {
-                setSpinner(true)
+                setSpinner(true);
                 localStorage.removeItem("token");
                 setLogado(false);
                 setUsuario({ id: 0, username: "Anônimo" });
-                setSpinner(false)
+                setSpinner(false);
               }}
             >
               Deslogar
@@ -371,9 +371,13 @@ function Index() {
                   setDeletar(true);
                 }}
                 onClick={() => {
-                  history.push(`/image/${image.id}`);
+                  history.push(`/image/${image.id}/`);
+                }}
+                tagClick={(id) => {
+                  history.push(`/tags/${id}/`);
                 }}
                 showDelete={image.owner.id == usuario.id}
+                avatar={true}
               />
             );
           })}
@@ -391,7 +395,11 @@ function Index() {
                 onClick={() => {
                   history.push(`/image/${image.id}`);
                 }}
+                tagClick={(id) => {
+                  history.push(`/tags/${id}/`);
+                }}
                 showDelete={image.owner.id == usuario.id}
+                avatar={true}
               />
             );
           })}
@@ -409,7 +417,11 @@ function Index() {
                 onClick={() => {
                   history.push(`/image/${image.id}`);
                 }}
+                tagClick={(id) => {
+                  history.push(`/tags/${id}/`);
+                }}
                 showDelete={image.owner.id == usuario.id}
+                avatar={true}
               />
             );
           })}

@@ -8,7 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
 import "../styles/imagePage.css";
-import { deletarTag, getTags, postTagImagem } from "../services/tagService";
+import { buscarTag, deletarTag, getTags, postTagImagem } from "../services/tagService";
 import { getLogado } from "../services/loginService";
 
 function Image() {
@@ -45,7 +45,7 @@ function Image() {
         <GiReturnArrow
           className="page-image-voltar"
           onClick={() => {
-            history.goBack();
+            history.push("/");
           }}
         />
         <div className="page-image-grupo">
@@ -129,16 +129,21 @@ function Image() {
             ) : null}
             <div className="page-image-grupo-avatar">
               {imagem.tags.map((e) => {
-                const tagId = e;
+                const tag = e;
                 return (
-                  <p className="page-image-tag" key={tagId.name + tagId}>
-                    {tagId.name}
+                  <p className="page-image-tag" key={tag.name + tag.id} onClick={(e) =>{
+                    console.log(tag.id)
+                    buscarTag(tag.id).then(
+                      history.push(`/tags/${tag.id}/`)
+                    )
+                  }} >
+                    {tag.name}
                     {usuario.id == imagem.owner.id ? (
                       <MdDelete
                         className="page-image-deletar"
                         onClick={() => {
                           setSpinner(true);
-                          deletarTag(imagem.id, tagId.id).then((e) => {
+                          deletarTag(imagem.id, tag.id).then((e) => {
                             setImagem(e);
                             setSpinner(false);
                           });
@@ -176,7 +181,7 @@ function Image() {
                     </option>
                     {tags.map((tag) => {
                       return (
-                        <option key={tag.name + tag.id} value={tag.id}>
+                        <option key={tag.name + tag.id} value={tag.id} >
                           {tag.name}
                         </option>
                       );

@@ -426,8 +426,14 @@ main {
   font-size: x-large;
   font-weight: bold;
 }
+.imagens-titulo:hover {
+  cursor: pointer;
+}
 .imagens-titulo::first-letter {
   text-transform: uppercase;
+}
+.imagens-descricao:hover{
+  cursor: pointer;
 }
 .imagens-pai {
   position: relative;
@@ -467,7 +473,9 @@ main {
   margin-left: 10px;
   color: white;
 }
-
+.imagens-pai .info .tags span:hover {
+  cursor: pointer;
+}
 .imagens-pai:hover .info {
   visibility: visible;
 }
@@ -510,4 +518,11 @@ main {
   min-height: 300px;
   margin: 0;
   border-radius: 20px;
+}
+.imagens:hover {
+  cursor: pointer;
+}
+.page-tag-header{
+  display: flex;
+  justify-content: center;
 }
