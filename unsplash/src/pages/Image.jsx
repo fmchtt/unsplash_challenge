@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { alterarImagem, pegarImagem } from "../services/imageService";
+import { alterarImagem, darLike, pegarImagem } from "../services/imageService";
 import { GiReturnArrow } from "react-icons/gi";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiFillHeart } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
 import "../styles/imagePage.css";
-import { buscarTag, deletarTag, getTags, postTagImagem } from "../services/tagService";
+import {
+  buscarTag,
+  deletarTag,
+  getTags,
+  postTagImagem,
+} from "../services/tagService";
 import { getLogado } from "../services/loginService";
 
 function Image() {
@@ -20,6 +25,7 @@ function Image() {
   const [titulo, setTitulo] = useState();
   const [descricao, setDescricao] = useState();
   const [spinner, setSpinner] = useState(true);
+  // const [like, setLike] = useState(props.image.user_liked);
 
   let { id } = useParams();
 
@@ -49,7 +55,21 @@ function Image() {
           }}
         />
         <div className="page-image-grupo">
-          <img src={imagem.path} className="page-image-imagem" />
+          <div className="page-image-img-coracao">
+            <img src={imagem.path} className="page-image-imagem" />
+            <AiFillHeart
+              className={
+                imagem.user_liked ? "coracao-like vermelho" : "coracao-like"
+              }
+              onClick={(e) => {
+                setSpinner(true);
+                darLike(id).then((e) => {
+                  setImagem(e);
+                  setSpinner(false);
+                });
+              }}
+            />
+          </div>
           <div>
             <div className="page-image-grupo-avatar">
               <img
@@ -131,12 +151,14 @@ function Image() {
               {imagem.tags.map((e) => {
                 const tag = e;
                 return (
-                  <p className="page-image-tag" key={tag.name + tag.id} onClick={(e) =>{
-                    console.log(tag.id)
-                    buscarTag(tag.id).then(
-                      history.push(`/tags/${tag.id}/`)
-                    )
-                  }} >
+                  <p
+                    className="page-image-tag"
+                    key={tag.name + tag.id}
+                    onClick={(e) => {
+                      console.log(tag.id);
+                      buscarTag(tag.id).then(history.push(`/tags/${tag.id}/`));
+                    }}
+                  >
                     {tag.name}
                     {usuario.id == imagem.owner.id ? (
                       <MdDelete
@@ -181,7 +203,7 @@ function Image() {
                     </option>
                     {tags.map((tag) => {
                       return (
-                        <option key={tag.name + tag.id} value={tag.id} >
+                        <option key={tag.name + tag.id} value={tag.id}>
                           {tag.name}
                         </option>
                       );
@@ -190,6 +212,7 @@ function Image() {
                 )
               ) : null}
             </div>
+            <p className="page-image-likes">Likes: {imagem.image_likes}</p>
           </div>
         </div>
       </div>

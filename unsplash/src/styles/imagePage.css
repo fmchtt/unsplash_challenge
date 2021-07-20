@@ -145,10 +145,19 @@ body {
   border-radius: 10px;
   margin-right: 10px;
 }
+.page-image-img-coracao{
+  position: relative;
+}
 .page-image-imagem {
   height: 90vh;
   max-width: 60vw;
   object-fit: contain;
+}
+.page-image-img-coracao:hover .coracao-like{ 
+  visibility: visible;
+}
+.coracao-like{
+  visibility: visible;
 }
 .page-image-avatar {
   height: 60px;
@@ -171,4 +180,8 @@ body {
 }
 .page-image-addTag:active {
   transform: scale(1.1);
+}
+.page-image-likes{
+  font-size: large;
+  margin-left: 10px;
 }

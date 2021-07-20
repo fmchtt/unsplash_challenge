@@ -40,7 +40,7 @@ function Index() {
       let array1 = [];
       let array2 = [];
       let array3 = [];
-      img.data.forEach((image) => {
+      img.forEach((image) => {
         if (count == 1) {
           array1.push(image);
           count = 2;

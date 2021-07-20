@@ -432,7 +432,7 @@ main {
 .imagens-titulo::first-letter {
   text-transform: uppercase;
 }
-.imagens-descricao:hover{
+.imagens-descricao:hover {
   cursor: pointer;
 }
 .imagens-pai {
@@ -476,8 +476,24 @@ main {
 .imagens-pai .info .tags span:hover {
   cursor: pointer;
 }
-.imagens-pai:hover .info {
+.imagens-pai:hover .info , .imagens-pai:hover  .coracao-like {
   visibility: visible;
+}
+.coracao-like{
+  position: absolute;
+  visibility: hidden;
+  top: 20px;
+  left: 10px;
+  z-index: 201;
+  font-size: xx-large;
+  color: gray;
+}
+.vermelho{
+  color: red;
+}
+.coracao-like:hover{
+  cursor: pointer;
+  color: red;
 }
 
 .imagens-pai .info > div {
@@ -522,7 +538,7 @@ main {
 .imagens:hover {
   cursor: pointer;
 }
-.page-tag-header{
+.page-tag-header {
   display: flex;
   justify-content: center;
 }

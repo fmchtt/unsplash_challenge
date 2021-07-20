@@ -1,15 +1,20 @@
 import api from "./api";
 
 function getHeader() {
-  return {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-  };
+  if (localStorage.getItem("token")) {
+    return {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+  } else {
+    return {};
+  }
 }
 
-export function getImages() {
-  return api.get("images/");
+export async function getImages() {
+  const imagens = await api.get("images/", getHeader());
+  return imagens.data;
 }
 
 export async function deleteImage(id) {
@@ -39,4 +44,9 @@ export async function postImage(form) {
 export async function getPesquisaImages(s) {
   const pesquisa = await api.get(`images/?p=${s}`, getHeader());
   return pesquisa.data;
+}
+
+export async function darLike(id) {
+  const like = await api.get(`images/like/${id}`, getHeader());
+  return like.data;
 }
