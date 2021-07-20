@@ -6,6 +6,7 @@ import { BsPlusCircleFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineClose } from "react-icons/ai";
+import { ImSpinner9 } from "react-icons/im";
 import "../styles/imagePage.css";
 import { deletarTag, getTags, postTagImagem } from "../services/tagService";
 import { getLogado } from "../services/loginService";
@@ -18,12 +19,14 @@ function Image() {
   const [modal, setModal] = useState(false);
   const [titulo, setTitulo] = useState();
   const [descricao, setDescricao] = useState();
+  const [spinner, setSpinner] = useState(true);
 
   let { id } = useParams();
 
   const history = useHistory();
 
   useEffect(() => {
+    setSpinner(true);
     pegarImagem(id).then((e) => {
       setImagem(e);
     });
@@ -33,6 +36,7 @@ function Image() {
     getLogado().then((e) => {
       setUsuario(e);
     });
+    setSpinner(false);
   }, []);
 
   if (imagem) {
@@ -64,9 +68,11 @@ function Image() {
                 <FiEdit
                   className="page-image-alterar"
                   onClick={() => {
+                    setSpinner(true);
                     setTitulo(imagem.title);
                     setDescricao(imagem.description);
                     setModal(true);
+                    setSpinner(false);
                   }}
                 />
               ) : null}
@@ -77,14 +83,18 @@ function Image() {
                 <AiOutlineClose
                   className="sair-modal"
                   onClick={() => {
+                    setSpinner(true);
                     setModal(false);
+                    setSpinner(false);
                   }}
                 />
                 <form
                   className="page-image-modal-form"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    alterarImagem(imagem.id, titulo, descricao);
+                    alterarImagem(imagem.id, titulo, descricao).then((e) => {
+                      setImagem(e);
+                    });
                     setModal(false);
                   }}
                 >
@@ -112,18 +122,25 @@ function Image() {
                 </form>
               </div>
             ) : null}
+            {spinner ? (
+              <div className="div-spinner">
+                <ImSpinner9 className="spinner" />
+              </div>
+            ) : null}
             <div className="page-image-grupo-avatar">
               {imagem.tags.map((e) => {
                 const tagId = e;
                 return (
-                  <p className="page-image-tag">
+                  <p className="page-image-tag" key={tagId.name + tagId}>
                     {tagId.name}
                     {usuario.id == imagem.owner.id ? (
                       <MdDelete
                         className="page-image-deletar"
                         onClick={() => {
+                          setSpinner(true);
                           deletarTag(imagem.id, tagId.id).then((e) => {
                             setImagem(e);
+                            setSpinner(false);
                           });
                         }}
                       />
@@ -146,10 +163,11 @@ function Image() {
                     id="tag_id"
                     className="page-image-select"
                     onChange={(e) => {
+                      setSpinner(true);
                       postTagImagem(imagem.id, e.target.value).then((e) => {
                         setImagem(e);
+                        setSpinner(false);
                       });
-                      // console.log(e.target.value)
                       setTrocarTag(false);
                     }}
                   >

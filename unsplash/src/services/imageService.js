@@ -13,7 +13,7 @@ export function getImages() {
 }
 
 export async function deleteImage(id) {
-  const deletar = await api.delete(`images/${id}/`, getHeader());
+  await api.delete(`images/${id}/`, getHeader());
   return true;
 }
 

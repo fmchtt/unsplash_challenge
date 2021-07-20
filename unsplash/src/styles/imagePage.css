@@ -103,6 +103,9 @@ body {
   border-radius: 5px;
   padding: 10px;
 }
+.page-image-modal-form button:hover {
+  cursor: pointer;
+}
 .page-image-modal-close {
   /* margin: 20px 20px 0 0; */
   align-self: flex-end;
