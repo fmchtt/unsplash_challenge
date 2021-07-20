@@ -116,18 +116,73 @@ form > p {
   z-index: 200;
   background: rgba(0, 0, 0, 0.4);
 }
+.grupo-cadastro-login {
+  display: flex;
+  flex-direction: column;
+}
 .logar-submit {
   border: none;
   border-radius: 10px;
   background-color: seagreen;
   color: white;
-  width: 10%;
+  font-size: large;
+  padding: 15px 25px;
+  height: fit-content;
+  margin: 0 0 10px 0;
 }
 .logar-submit:hover {
   cursor: pointer;
 }
 .logar-submit:active {
   transform: scale(1.1);
+}
+.cadastro-button {
+  border: none;
+  border-radius: 10px;
+  background-color: seagreen;
+  color: white;
+  font-size: large;
+  padding: 15px 10px;
+}
+.cadastro-button:hover {
+  cursor: pointer;
+}
+.cadastro-button:active {
+  transform: scale(1.1);
+}
+.modal-cadastro-fundo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 101%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.603);
+  z-index: 200;
+}
+.modal-cadastro {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 50px 60px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  z-index: 201;
+}
+.modal-cadastro button {
+  border: none;
+  border-radius: 4px;
+  background-color: seagreen;
+  color: white;
+  margin-top: 30px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: medium;
 }
 .form-login {
   display: flex;
@@ -156,20 +211,21 @@ form > p {
   color: white;
   cursor: pointer;
 }
-.form-login h3 {
+.modal-h3 {
   font-size: xx-large;
   color: gray;
   padding: 0;
   margin: 10px 0 10px 0;
+  align-self: center;
 }
-.form-login input {
+.modal-input {
   margin-top: 15px;
   height: 30px;
   border: none;
   border-bottom: solid gray 1px;
   font-size: medium;
 }
-.form-login button {
+.modal-button {
   border: none;
   border-radius: 4px;
   background-color: seagreen;

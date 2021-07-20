@@ -6,5 +6,14 @@ export async function putAvatar(arquivo) {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
   });
-  return novoAvatar.data
+  return novoAvatar.data;
+}
+
+export async function criarUsuario(usuario, email, senha) {
+  const novoUsuario = await api.post(
+    "users/",
+    { username: usuario, email: email, password: senha },
+    {}
+  );
+  return novoUsuario.data;
 }

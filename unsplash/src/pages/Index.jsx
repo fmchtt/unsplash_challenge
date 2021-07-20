@@ -9,7 +9,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { ImSpinner9 } from "react-icons/im";
 import ImageCard from "../components/ImageCard";
 import ImagesCreateModal from "../components/ImageCreateModal";
-import { putAvatar } from "../services/usuarioService";
+import { criarUsuario, putAvatar } from "../services/usuarioService";
 import { useHistory } from "react-router-dom";
 
 function Index() {
@@ -21,6 +21,7 @@ function Index() {
   const [logado, setLogado] = useState(false);
   const [logar, setLogar] = useState(false);
   const [usuario, setUsuario] = useState({ id: 0, username: "Anônimo" });
+  const [cadastrar, setCadastrar] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [pesquisa, setPesquisa] = useState();
   const [spinner, setSpinner] = useState(true);
@@ -183,26 +184,87 @@ function Index() {
             <button
               className="button-deslogar"
               onClick={() => {
+                setSpinner(true)
                 localStorage.removeItem("token");
                 setLogado(false);
                 setUsuario({ id: 0, username: "Anônimo" });
+                setSpinner(false)
               }}
             >
               Deslogar
             </button>
           </div>
         ) : (
-          <button
-            className="logar-submit"
-            onClick={(e) => {
-              e.preventDefault();
-              setLogar(true);
-            }}
-          >
-            Logar
-          </button>
+          <div className="grupo-cadastro-login">
+            <button
+              className="logar-submit"
+              onClick={(e) => {
+                e.preventDefault();
+                setLogar(true);
+              }}
+            >
+              Logar
+            </button>
+            <button
+              className="cadastro-button"
+              onClick={(e) => {
+                e.preventDefault();
+                setCadastrar(true);
+              }}
+            >
+              Cadastrar
+            </button>
+          </div>
         )}
       </header>
+      {cadastrar ? (
+        <div className="modal-cadastro-fundo">
+          <AiOutlineClose
+            className="sair-modal"
+            onClick={(e) => {
+              setCadastrar(false);
+            }}
+          />
+          <form
+            className="modal-cadastro"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSpinner(true);
+              criarUsuario(usuario, email, senha).then((e) => {
+                setSpinner(false);
+              });
+              setCadastrar(false);
+            }}
+          >
+            <h3 className="modal-h3">Cadastro</h3>
+            <input
+              className="modal-input"
+              type="text"
+              placeholder="Usuário"
+              onChange={(e) => {
+                setUsuario(e.target.value);
+              }}
+            ></input>
+            <input
+              className="modal-input"
+              type="email"
+              placeholder="Email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            ></input>
+            <input
+              className="modal-input"
+              type="password"
+              placeholder="Senha"
+              onChange={(e) => {
+                setSenha(e.target.value);
+              }}
+            ></input>
+            <button type="submit">Confirmar</button>
+          </form>
+        </div>
+      ) : null}
       {logar ? (
         <div className="div-login">
           <AiOutlineClose
@@ -210,12 +272,10 @@ function Index() {
             className="login-close"
           />
           <form onSubmit={submitLogin} className="form-login">
-            <h3>Entrar</h3>
+            <h3 className="modal-h3">Entrar</h3>
             <input
               type="email"
-              name="email"
-              id="email"
-              className="input-email"
+              className="modal-input"
               placeholder="Email"
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -223,16 +283,14 @@ function Index() {
             ></input>
             <input
               type="password"
-              name="password"
-              id="password"
-              className="input-senha"
+              className="modal-input"
               placeholder="Senha"
               onChange={(e) => {
                 setSenha(e.target.value);
               }}
             ></input>
             {erroLogin ? <p>{erroLogin}</p> : null}
-            <button type="submit" className="form-loguin_submit">
+            <button type="submit" className="modal-button">
               Confirmar
             </button>
           </form>
