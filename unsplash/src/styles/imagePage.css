@@ -83,7 +83,7 @@ body {
 .page-image-modal-form label {
   font-size: larger;
   font-weight: bold;
-  margin: 0 0 10px 0;
+  margin: 10px 0 10px 0;
 }
 .page-image-modal-form input {
   margin: 10px 0 20px 0;

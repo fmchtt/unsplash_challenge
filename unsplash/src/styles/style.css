@@ -249,30 +249,27 @@ main {
   position: fixed;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 40px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  width: 40vw;
-  height: 30vh;
   z-index: 200;
-  border-radius: 25px;
-  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
 }
 .modal-deletar p {
   font-size: larger;
   align-self: center;
 }
 .modal-deletar button {
-  width: 30%;
-  border: 2px solid red;
+  border: none;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0);
-  color: red;
-  padding: 5px;
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
   margin-top: 7%;
   align-self: center;
+  font-size: medium;
 }
 .modal-deletar button:hover {
   cursor: pointer;
@@ -291,7 +288,7 @@ main {
 .md-fechar:active {
   transform: scale(0.95);
 }
-.sairModal {
+.sair-modal {
   font-size: 36px;
   position: fixed;
   left: 20px;
@@ -299,11 +296,11 @@ main {
   color: #fff;
   z-index: 201;
 }
-.sairModal:hover {
+.sair-modal:hover {
   cursor: pointer;
   transform: scale(1.05);
 }
-.sairModal:active {
+.sair-modal:active {
   transform: scale(0.9);
 }
 .div-spinner {

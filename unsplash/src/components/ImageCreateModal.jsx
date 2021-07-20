@@ -41,7 +41,7 @@ const ImagesCreateModal = (props) => {
   if (props.visible) {
     return (
       <div className="modal">
-        <AiOutlineClose onClick={props.clickClose} className="sairModal" />
+        <AiOutlineClose onClick={props.clickClose} className="sair-modal" />
         <form className="modal-form" onSubmit={submitImage}>
           <label htmlFor="title">Titulo</label>
           <input type="text" id="title" name="title" className="modal-form-titulo" />

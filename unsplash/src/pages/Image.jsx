@@ -74,6 +74,12 @@ function Image() {
             <p className="page-image-descricao">{imagem.description}</p>
             {modal ? (
               <div className="page-image-modal-fundo">
+                <AiOutlineClose
+                  className="sair-modal"
+                  onClick={() => {
+                    setModal(false);
+                  }}
+                />
                 <form
                   className="page-image-modal-form"
                   onSubmit={(e) => {
@@ -82,12 +88,6 @@ function Image() {
                     setModal(false);
                   }}
                 >
-                  <AiOutlineClose
-                    className="page-image-modal-close"
-                    onClick={() => {
-                      setModal(false);
-                    }}
-                  />
                   <label htmlFor="titulo">Título</label>
                   <input
                     type="text"

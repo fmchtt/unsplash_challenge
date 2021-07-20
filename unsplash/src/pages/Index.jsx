@@ -262,29 +262,31 @@ function Index() {
           }}
         />
         {deletar ? (
-          <div className="modal-deletar">
+          <div className="modal">
             <AiOutlineClose
-              className="md-fechar"
+              className="sair-modal"
               onClick={() => {
                 setDeletar(false);
               }}
             />
-            <p>Tem certeza que deseja deletar a imagem?</p>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setSpinner(true);
-                setDeletar(false);
-                deleteImage(idImagem).then((e) => {
-                  if (e) {
-                    carregar();
-                  }
-                });
-                carregar();
-              }}
-            >
-              Confirmar
-            </button>
+            <div className="modal-deletar">
+              <p>Tem certeza que deseja deletar a imagem?</p>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSpinner(true);
+                  setDeletar(false);
+                  deleteImage(idImagem).then((e) => {
+                    if (e) {
+                      carregar();
+                    }
+                  });
+                  carregar();
+                }}
+              >
+                Confirmar
+              </button>
+            </div>
           </div>
         ) : null}
         {modalImagem ? (
