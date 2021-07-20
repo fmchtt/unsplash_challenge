@@ -17,6 +17,7 @@ def get_db() -> Session:
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/login')
+optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/login', auto_error=False)
 JWT_SECRET = "369427D1F63844402D16F508AE1F278EEE79A613FD669A4C5C353E0633A72A88"
 
 def verify_password(plain_password: str, hashed_password: str):

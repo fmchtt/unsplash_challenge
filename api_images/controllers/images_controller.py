@@ -1,3 +1,4 @@
+import typing
 from fastapi import UploadFile, File
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
@@ -10,15 +11,21 @@ from api_images.models import images_model, tags_model, user_model
 from api_images.schemas import images_schema
 from datetime import datetime
 
-def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100):
+def lista_imagens(db: Session, p: str, url: str, user_id: typing.Optional[int] = None, skip: int = 0, limit: int = 100):
     if p:
         images = db.query(images_model.Images).filter(or_(images_model.Images.tags.any(tags_model.Tags.name.like(f"%{p}%")),images_model.Images.title.like(f"%{p}%"))).offset(skip).limit(limit).all()
     else:
         images = db.query(images_model.Images).order_by(images_model.Images.id.desc()).offset(skip).limit(limit).all()
 
+    if user_id:
+       user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
+
     for image in images:
         image.path = f'{url}{image.path}'
         image.image_likes = len(image.likes)
+        if user_id:
+            if user in image.likes:
+                image.user_liked = True
 
         if image.owner.avatar_url and not str(url) in image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
@@ -27,6 +34,7 @@ def lista_imagens(db: Session, p: str, url: str ,skip: int = 0, limit: int = 100
     
 
 def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: int, url: str,file: UploadFile = File(...)):
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
     if file.content_type not in ['image/png', 'image/jpeg', 'image/webp', 'image/gif']:
         raise HTTPException(400, detail='Tipo de arquivo não aceito!')
 
@@ -59,10 +67,13 @@ def criar_imagem(db: Session, user_id: int, title: str, description: str, tag: i
     if image_obj.owner.avatar_url:
         image_obj.owner.avatar_url = f'{url}{image_obj.owner.avatar_url}'
     image_obj.path = f'{url}{image_obj.path}'
+    if user in image_obj.likes:
+        image_obj.user_liked = True
     return image_obj
 
-def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id, url: str):
+def adicionar_tag(db: Session, image_id: int, user_id: int, tag_id, url: str):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
 
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
@@ -81,6 +92,8 @@ def adicionar_tag(db: Session, image_id: int, user_id: str, tag_id, url: str):
     db.refresh(image)
 
     image.image_likes = len(image.likes)
+    if user in image.likes:
+        image.user_liked = True
     if image.owner.avatar_url:
         image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
     image.path = f'{url}{image.path}'
@@ -102,8 +115,13 @@ def deletar_imagem(db: Session, image_id: int, user_id: str):
     db.commit()
     return images_schema.ImagesDelete(message="Imagem deletada com sucesso")
 
-def buscar_imagem(db: Session, image_id: int, url: str):
+def buscar_imagem(db: Session, image_id: int, url: str, user_id: typing.Optional[int] = None):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+
+    if user_id:
+        user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
+        if user in image.likes:
+            image.user_liked = True
 
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
@@ -117,6 +135,7 @@ def buscar_imagem(db: Session, image_id: int, url: str):
 
 def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int, user_id:int, url: str):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
 
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
@@ -129,6 +148,8 @@ def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int,
     db.commit()
     db.refresh(image)
 
+    if user in image.likes:
+        image.user_liked = True
     image.image_likes = len(image.likes)
     image.path = f'{url}{image.path}'
     if image.owner.avatar_url:
@@ -139,6 +160,7 @@ def editar_imagem(db: Session, image_edit: images_schema.ImageEdit,image_id:int,
 
 def remover_tags(db: Session, image_id: int, user_id: str, tag_id, url: str):
     image = db.query(images_model.Images).filter(images_model.Images.id == image_id).first()
+    user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
 
     if not image:
         raise HTTPException(404, detail='Imagem não encontrada!')
@@ -157,6 +179,8 @@ def remover_tags(db: Session, image_id: int, user_id: str, tag_id, url: str):
     db.refresh(image)
 
     image.image_likes = len(image.likes)
+    if user in image.likes:
+        image.user_liked = True
     if image.owner.avatar_url:
         image.owner.avatar_url = f'{url}{image.owner.avatar_url}'
     image.path = f'{url}{image.path}'
@@ -183,6 +207,8 @@ def like_image(db: Session, image_id:int, user_id:int, url: str):
     db.refresh(image)
 
     image.image_likes = len(image.likes)
+    if user in image.likes:
+        image.user_liked = True
     image.path = f'{url}{image.path}'
     if image.owner.avatar_url:
             image.owner.avatar_url = f'{url}{image.owner.avatar_url}'

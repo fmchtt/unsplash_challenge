@@ -1,5 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel
+from sqlalchemy.sql.sqltypes import Boolean
 
 class User(BaseModel):
     username: str
@@ -42,4 +43,5 @@ class Images(ImagesBase):
     id: int
     owner: User
     image_likes: int
+    user_liked: Optional[bool] = False
     tags: List[Tags]

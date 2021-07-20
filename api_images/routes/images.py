@@ -4,7 +4,7 @@ from api_images.controllers import images_controller
 from api_images.schemas import images_schema
 from sqlalchemy.orm import Session
 from api_images.database import SessionLocal
-from api_images.routes.auth import oauth2_scheme, decript_token
+from api_images.routes.auth import oauth2_scheme, decript_token, optional_oauth2_scheme
 
 router = APIRouter()
 
@@ -17,13 +17,21 @@ def get_db() -> Session:
         
 
 @router.get("/", response_model=List[images_schema.Images])
-def listar_imagens(request: Request, skip: int = 0, limit: int = 100, p: str = None,db: Session = Depends(get_db)):
-    images = images_controller.lista_imagens(db, p, request.base_url, skip=skip, limit=limit)
+def listar_imagens(request: Request, skip: int = 0, limit: int = 100, p: str = None,db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
+    if token:
+        user_id = decript_token(token).get('id')
+    else:
+        user_id = None
+    images = images_controller.lista_imagens(db, p, request.base_url, user_id,skip=skip, limit=limit)
     return images
 
 @router.get("/{image_id:int}/", response_model=images_schema.Images)
-def buscar_imagem(request: Request, image_id: int, db: Session = Depends(get_db)):
-    image = images_controller.buscar_imagem(db, image_id, request.base_url)
+def buscar_imagem(request: Request, image_id: int, db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
+    if token:
+        user_id = decript_token(token).get('id')
+    else:
+        user_id = None
+    image = images_controller.buscar_imagem(db, image_id, request.base_url, user_id)
     return image
 
 @router.post("/", response_model=images_schema.Images, status_code=201)
