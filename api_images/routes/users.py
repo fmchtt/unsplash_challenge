@@ -43,7 +43,7 @@ def criar_usuario(user: user_schema.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email já registrado!")
     return users_controller.criar_usuario(db, user)
 
-@router.get('/me', response_model=user_schema.User)
+@router.get('/me', response_model=user_schema.UserLogin)
 def verificar_usuario_logado(request: Request, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user_id = decript_token(token).get('id')
     return users_controller.verificar_usuario(db, user_id, request.base_url)
