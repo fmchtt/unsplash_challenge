@@ -271,7 +271,12 @@ function Index() {
             onClick={() => setLogar(false)}
             className="login-close"
           />
-          <form onSubmit={submitLogin} className="form-login">
+          <form
+            onSubmit={(e) => {
+              submitLogin(e);
+            }}
+            className="form-login"
+          >
             <h3 className="modal-h3">Entrar</h3>
             <input
               type="email"

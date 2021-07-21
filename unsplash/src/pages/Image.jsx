@@ -25,7 +25,6 @@ function Image() {
   const [titulo, setTitulo] = useState();
   const [descricao, setDescricao] = useState();
   const [spinner, setSpinner] = useState(true);
-  // const [like, setLike] = useState(props.image.user_liked);
 
   let { id } = useParams();
 
@@ -57,18 +56,18 @@ function Image() {
         <div className="page-image-grupo">
           <div className="page-image-img-coracao">
             <img src={imagem.path} className="page-image-imagem" />
-            <AiFillHeart
-              className={
-                imagem.user_liked ? "coracao-like vermelho" : "coracao-like"
-              }
-              onClick={(e) => {
-                setSpinner(true);
-                darLike(id).then((e) => {
-                  setImagem(e);
-                  setSpinner(false);
-                });
-              }}
-            />
+            {localStorage.getItem("token") ? (
+              <AiFillHeart
+                className={imagem.user_liked ? "coracao-like vermelho" : "coracao-like"}
+                onClick={(e) => {
+                  setSpinner(true);
+                  darLike(id).then((e) => {
+                    setImagem(e);
+                    setSpinner(false);
+                  });
+                }}
+              />
+            ) : null}
           </div>
           <div>
             <div className="page-image-grupo-avatar">
