@@ -15,6 +15,8 @@ class Images(BaseModel):
   description: Optional[str] = None
   path: str
   owner: User
+  user_liked: Optional[bool] = False
+  image_likes: int
 
   class Config:
     orm_mode = True

@@ -7,14 +7,24 @@ from datetime import datetime
 import os
 import shutil
 
-def buscar_usuario(db: Session, user_id: int, url: str):
+def buscar_usuario(db: Session, user_id: int, url: str, user_like: int):
     user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(404, detail='Usuario nao encontrado!')
+
+    if user_id:
+        user_image = db.query(user_model.User).filter(user_model.User.id == user_like).first()
     
     if user.avatar_url:
         user.avatar_url = f'{url}{user.avatar_url}'
 
     for image in user.images:
         image.path = f'{url}{image.path}'
+        image.image_likes = len(image.likes)
+        if user_id:
+            if user_image in image.likes:
+                image.user_liked = True
 
     return user
 

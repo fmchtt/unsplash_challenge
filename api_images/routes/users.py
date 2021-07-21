@@ -4,7 +4,7 @@ from typing import List
 from fastapi.datastructures import UploadFile
 from api_images.controllers import users_controller
 from api_images.schemas import user_schema
-from api_images.routes.auth import decript_token, oauth2_scheme
+from api_images.routes.auth import decript_token, oauth2_scheme, optional_oauth2_scheme
 from sqlalchemy.orm import Session
 from api_images.database import SessionLocal
 
@@ -25,8 +25,12 @@ def listar_usuarios(request: Request,skip: int = 0, limit: int = 100, token: str
 
 
 @router.get("/{user_id:int}/", response_model=user_schema.User)
-def buscar_usuario(request: Request, user_id: int, db: Session = Depends(get_db)):
-    db_user = users_controller.buscar_usuario(db, user_id, request.base_url)
+def buscar_usuario(request: Request, user_id: int, db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
+    if token:
+        user_like = decript_token(token).get('id')
+    else:
+        user_like = None
+    db_user = users_controller.buscar_usuario(db, user_id, request.base_url, user_like)
     if db_user is None:
         raise HTTPException(status_code=404, detail="Usuário não encontrado!")
     return db_user

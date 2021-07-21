@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from api_images.schemas import tags_schema, images_schema
 from api_images.controllers import tags_controller, images_controller
 from typing import List
-from api_images.routes.auth import decript_token, oauth2_scheme
+from api_images.routes.auth import decript_token, oauth2_scheme, optional_oauth2_scheme
 
 router = APIRouter()
 
@@ -30,8 +30,12 @@ def criar_tag(tag: tags_schema.TagsCreate, db: Session = Depends(get_db), token:
   return tags_controller.criar_tag(db, tag.name)
 
 @router.get('/{tag_id:int}/', response_model=tags_schema.Tags)
-def buscar_tag(tag_id: int, request: Request, db: Session = Depends(get_db)):
-  return tags_controller.buscar_tag(db, tag_id, request.base_url)
+def buscar_tag(tag_id: int, request: Request, db: Session = Depends(get_db), token: str = Depends(optional_oauth2_scheme)):
+  if token:
+    user_id = decript_token(token).get('id')
+  else:
+    user_id = None
+  return tags_controller.buscar_tag(db, tag_id, request.base_url, user_id)
 
 
 @router.delete("/remove/{image_id:int}/tag/{tag_id:int}/", response_model=images_schema.Images)
