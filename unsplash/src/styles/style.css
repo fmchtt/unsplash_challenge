@@ -542,3 +542,7 @@ main {
   display: flex;
   justify-content: center;
 }
+.modal-error {
+  color: red;
+  align-self: center;
+}
