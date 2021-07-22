@@ -1,10 +1,6 @@
-import { useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
-import { darLike } from "../services/imageService";
 
 const ImageCard = (props) => {
-  const [like, setLike] = useState(props.image.user_liked);
-
   return (
     <div className="imagens-pai">
       <img
@@ -15,11 +11,10 @@ const ImageCard = (props) => {
       />
       {localStorage.getItem("token") ? (
         <AiFillHeart
-          className={like ? "coracao-like vermelho" : "coracao-like"}
-          onClick={(e) => {
-            setLike(!like);
-            darLike(props.image.id);
-          }}
+          className={
+            props.image.user_liked ? "coracao-like vermelho" : "coracao-like"
+          }
+          onClick={props.onLikeClick}
         />
       ) : null}
       <div className="info">

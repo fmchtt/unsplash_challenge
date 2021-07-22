@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { GiReturnArrow } from "react-icons/gi";
 import { ImSpinner9 } from "react-icons/im";
 import { AiOutlineClose } from "react-icons/ai";
-import { buscarTag, getTags } from "../services/tagService";
+import { buscarTag } from "../services/tagService";
 import ImageCard from "../components/ImageCard";
 import { getLogado } from "../services/loginService";
 import { deleteImage } from "../services/imageService";

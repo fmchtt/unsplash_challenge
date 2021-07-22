@@ -394,34 +394,6 @@ main {
   background-color: rgba(0, 0, 0, 0.603);
   z-index: 200;
 }
-.modal-imagem {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-imagem > img {
-  height: 80vh;
-  max-width: 80vw;
-  border-radius: 20px;
-  object-fit: contain;
-}
-.modal-imagem-exit {
-  position: fixed;
-  top: 15px;
-  right: 20px;
-  font-size: x-large;
-  color: white;
-  z-index: 201;
-}
-.modal-imagem-exit:hover {
-  cursor: pointer;
-}
 .imagens-titulo {
   font-size: x-large;
   font-weight: bold;
@@ -476,10 +448,11 @@ main {
 .imagens-pai .info .tags span:hover {
   cursor: pointer;
 }
-.imagens-pai:hover .info , .imagens-pai:hover  .coracao-like {
+.imagens-pai:hover .info,
+.imagens-pai:hover .coracao-like {
   visibility: visible;
 }
-.coracao-like{
+.coracao-like {
   position: absolute;
   visibility: hidden;
   top: 20px;
@@ -488,10 +461,10 @@ main {
   font-size: xx-large;
   color: gray;
 }
-.vermelho{
+.vermelho {
   color: red;
 }
-.coracao-like:hover{
+.coracao-like:hover {
   cursor: pointer;
   color: red;
 }

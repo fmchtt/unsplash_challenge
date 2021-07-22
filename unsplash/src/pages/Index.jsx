@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  darLike,
   deleteImage,
   getImages,
   getPesquisaImages,
@@ -27,14 +28,15 @@ function Index() {
   const [spinner, setSpinner] = useState(true);
   const [deletar, setDeletar] = useState(false);
   const [idImagem, setIdImagem] = useState();
-  const [modalImagem, setModalImagem] = useState(false);
-  const [pathImagem, setPathImagem] = useState();
   const [erroLogin, setErroLogin] = useState();
 
   const history = useHistory();
 
   function carregar() {
     setSpinner(true);
+    setImages1([]);
+    setImages2([]);
+    setImages3([]);
     getImages().then((img) => {
       let count = 1;
       let array1 = [];
@@ -107,6 +109,7 @@ function Index() {
           setErroLogin("");
           getLogado().then((log) => {
             setUsuario(log);
+            carregar();
             setSpinner(false);
           });
         })
@@ -188,7 +191,7 @@ function Index() {
                 localStorage.removeItem("token");
                 setLogado(false);
                 setUsuario({ id: 0, username: "Anônimo" });
-                setSpinner(false);
+                carregar();
               }}
             >
               Deslogar
@@ -271,12 +274,7 @@ function Index() {
             onClick={() => setLogar(false)}
             className="login-close"
           />
-          <form
-            onSubmit={(e) => {
-              submitLogin(e);
-            }}
-            className="form-login"
-          >
+          <form onSubmit={submitLogin} className="form-login">
             <h3 className="modal-h3">Entrar</h3>
             <input
               type="email"
@@ -352,21 +350,8 @@ function Index() {
             </div>
           </div>
         ) : null}
-        {modalImagem ? (
-          <div className="fundo-imagem">
-            <AiOutlineClose
-              className="modal-imagem-exit"
-              onClick={() => {
-                setModalImagem(false);
-              }}
-            />
-            <div className="modal-imagem">
-              <img src={pathImagem} className="imagens" alt=""></img>
-            </div>
-          </div>
-        ) : null}
         <div>
-          {images1.map((image) => {
+          {images1.map((image, Index) => {
             return (
               <ImageCard
                 key={image.title + image.id}
@@ -378,27 +363,12 @@ function Index() {
                 onClick={() => {
                   history.push(`/image/${image.id}/`);
                 }}
-                tagClick={(id) => {
-                  history.push(`/tags/${id}/`);
-                }}
-                showDelete={image.owner.id == usuario.id}
-                avatar={true}
-              />
-            );
-          })}
-        </div>
-        <div>
-          {images2.map((image) => {
-            return (
-              <ImageCard
-                key={image.title + image.id}
-                image={image}
-                clickDelete={(id) => {
-                  setIdImagem(id);
-                  setDeletar(true);
-                }}
-                onClick={() => {
-                  history.push(`/image/${image.id}`);
+                onLikeClick={() => {
+                  darLike(image.id).then((e) => {
+                    let aux = [...images1];
+                    aux[Index] = e;
+                    setImages1(aux);
+                  });
                 }}
                 tagClick={(id) => {
                   history.push(`/tags/${id}/`);
@@ -410,7 +380,7 @@ function Index() {
           })}
         </div>
         <div>
-          {images3.map((image) => {
+          {images2.map((image, Index) => {
             return (
               <ImageCard
                 key={image.title + image.id}
@@ -421,6 +391,42 @@ function Index() {
                 }}
                 onClick={() => {
                   history.push(`/image/${image.id}`);
+                }}
+                onLikeClick={() => {
+                  darLike(image.id).then((e) => {
+                    let aux = [...images2];
+                    aux[Index] = e;
+                    setImages2(aux);
+                  });
+                }}
+                tagClick={(id) => {
+                  history.push(`/tags/${id}/`);
+                }}
+                showDelete={image.owner.id == usuario.id}
+                avatar={true}
+              />
+            );
+          })}
+        </div>
+        <div>
+          {images3.map((image, Index) => {
+            return (
+              <ImageCard
+                key={image.title + image.id}
+                image={image}
+                clickDelete={(id) => {
+                  setIdImagem(id);
+                  setDeletar(true);
+                }}
+                onClick={() => {
+                  history.push(`/image/${image.id}`);
+                }}
+                onLikeClick={() => {
+                  darLike(image.id).then((e) => {
+                    let aux = [...images3];
+                    aux[Index] = e;
+                    setImages3(aux);
+                  });
                 }}
                 tagClick={(id) => {
                   history.push(`/tags/${id}/`);

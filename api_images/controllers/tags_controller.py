@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Session
 from api_images.models import tags_model, user_model
+from fastapi import HTTPException
+
 
 def listar_tags(db: Session):
   return db.query(tags_model.Tags).all()
@@ -13,6 +15,9 @@ def criar_tag(db: Session, nome: str):
 
 def buscar_tag(db: Session, tag_id: int, url: str, user_id: int):
   tag = db.query(tags_model.Tags).filter(tags_model.Tags.id == tag_id).first()
+
+  if not tag:
+    raise HTTPException(404, detail='Tag nao encontrado!')
 
   if user_id:
     user = db.query(user_model.User).filter(user_model.User.id == user_id).first()
