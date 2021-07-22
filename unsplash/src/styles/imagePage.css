@@ -37,7 +37,6 @@ body {
 .page-image-grupo-titulo-alterar {
   display: flex;
   justify-content: space-between;
-  /* width: 300px; */
 }
 .page-image-titulo {
   padding: 0;
@@ -119,7 +118,7 @@ body {
   display: flex;
   cursor: pointer;
 }
-.page-image-tag:hover{
+.page-image-tag:hover {
   cursor: pointer;
 }
 @keyframes aumentar {
@@ -145,7 +144,7 @@ body {
   border-radius: 10px;
   margin-right: 10px;
 }
-.page-image-img-coracao{
+.page-image-img-coracao {
   position: relative;
 }
 .page-image-imagem {
@@ -153,10 +152,10 @@ body {
   max-width: 60vw;
   object-fit: contain;
 }
-.page-image-img-coracao:hover .coracao-like{ 
+.page-image-img-coracao:hover .coracao-like {
   visibility: visible;
 }
-.coracao-like{
+.coracao-like {
   visibility: visible;
 }
 .page-image-avatar {
@@ -181,7 +180,7 @@ body {
 .page-image-addTag:active {
   transform: scale(1.1);
 }
-.page-image-likes{
+.page-image-likes {
   font-size: large;
   margin-left: 10px;
 }
