@@ -363,6 +363,9 @@ function Index() {
                 onClick={() => {
                   history.push(`/image/${image.id}/`);
                 }}
+                avatarClick={() => {
+                  history.push(`/users/${image.owner.id}`);
+                }}
                 onLikeClick={() => {
                   darLike(image.id).then((e) => {
                     let aux = [...images1];
@@ -399,6 +402,9 @@ function Index() {
                     setImages2(aux);
                   });
                 }}
+                avatarClick={() => {
+                  history.push(`/users/${image.owner.id}`);
+                }}
                 tagClick={(id) => {
                   history.push(`/tags/${id}/`);
                 }}
@@ -427,6 +433,9 @@ function Index() {
                     aux[Index] = e;
                     setImages3(aux);
                   });
+                }}
+                avatarClick={() => {
+                  history.push(`/users/${image.owner.id}`);
                 }}
                 tagClick={(id) => {
                   history.push(`/tags/${id}/`);

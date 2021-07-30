@@ -17,3 +17,12 @@ export async function criarUsuario(usuario, email, senha) {
   );
   return novoUsuario.data;
 }
+
+export async function buscarUsuario(id) {
+  const usuario = await api.get(`users/${id}/`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  });
+  return usuario.data;
+}

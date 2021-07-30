@@ -58,7 +58,9 @@ function Image() {
             <img src={imagem.path} className="page-image-imagem" />
             {localStorage.getItem("token") ? (
               <AiFillHeart
-                className={imagem.user_liked ? "coracao-like vermelho" : "coracao-like"}
+                className={
+                  imagem.user_liked ? "coracao-like vermelho" : "coracao-like"
+                }
                 onClick={(e) => {
                   setSpinner(true);
                   darLike(id).then((e) => {
@@ -77,6 +79,9 @@ function Image() {
                     ? imagem.owner.avatar_url
                     : "https://via.placeholder.com/75"
                 }
+                onClick={() => {
+                  history.push(`/users/${imagem.owner.id}`);
+                }}
                 className="page-image-avatar"
               ></img>
               <h1 className="page-image-nome">{imagem.owner.username}</h1>

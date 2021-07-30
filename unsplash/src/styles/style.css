@@ -22,6 +22,7 @@ form > p {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-left: 50px;
 }
 .div-avatar > p {
   margin-left: 15px;
@@ -431,7 +432,9 @@ main {
   height: 150px;
   object-fit: cover;
 }
-
+.imagens-pai .info .overlay-detail > img:hover {
+  cursor: pointer;
+}
 .imagens-pai .info .tags {
   display: flex;
   flex-wrap: wrap;

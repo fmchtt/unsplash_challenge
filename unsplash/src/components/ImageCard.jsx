@@ -39,6 +39,7 @@ const ImageCard = (props) => {
                   ? props.image.owner.avatar_url
                   : "https://via.placeholder.com/150"
               }
+              onClick={props.avatarClick}
             />
           ) : null}
           <div>

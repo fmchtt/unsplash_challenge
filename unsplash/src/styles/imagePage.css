@@ -164,6 +164,9 @@ body {
   border-radius: 50%;
   object-fit: cover;
 }
+.page-image-avatar:hover {
+  cursor: pointer;
+}
 .page-image-select {
   border: 1px solid gray;
   border-radius: 5px;
