@@ -24,6 +24,9 @@ A instalação do Backend deve ser efetuada primeiramente, e em seguida o Fronte
 Instale as dependências usando:
 > pip install -r requirements.txt
 
+Adicione a variável de ambiente JWT_SECRET exemplo:
+> export JWT_SECRET=999fcd37db543dbab3fd8d9fd2125377;
+
 Na pasta raiz, inicie usando:
 > python main.py 
 
