@@ -1,5 +1,6 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security.oauth2 import OAuth2PasswordRequestFormStrict
 from api_images.controllers import users_controller
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -7,6 +8,7 @@ from api_images.database import SessionLocal
 from api_images.schemas import auth_scheme
 import jwt
 import datetime
+import os
 
 def get_db() -> Session:
     db = SessionLocal()
@@ -18,7 +20,7 @@ def get_db() -> Session:
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/login')
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl='api/login', auto_error=False)
-JWT_SECRET = "369427D1F63844402D16F508AE1F278EEE79A613FD669A4C5C353E0633A72A88"
+JWT_SECRET = os.environ["JWT_SECRET"]
 
 def verify_password(plain_password: str, hashed_password: str):
   return pwd_context.verify(plain_password, hashed_password)
